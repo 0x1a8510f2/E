@@ -44,6 +44,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+
       - name: Build image
         run: |
           docker buildx build \
