@@ -36,7 +36,7 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     # Ensure test job passes before pushing image.
-    #needs: test
+    needs: test
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
@@ -63,8 +63,8 @@ jobs:
           # Strip "v" prefix from tag name
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
+          # Use `latest-dev` insted of `master`
+          [ "$VERSION" == "master" ] && VERSION=latest-dev
 
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
