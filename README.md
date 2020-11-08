@@ -1,5 +1,24 @@
 # E - Matrix Command & Control
-<img alt="Docker build status" src="https://github.com/TR-SLimey/E/workflows/DockerBuild/badge.svg"> <img alt="Matrix" src="https://img.shields.io/matrix/e:an-atom-in.space?server_fqdn=hydrogen.an-atom-in.space"> <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/TR-SLimey/E"> <img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed-raw/TR-SLimey/E"> <img alt="GitHub" src="https://img.shields.io/github/license/TR-SLimey/E"> <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr-raw/TR-SLimey/E"> <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/TR-SLimey/E">
+<p align="center">
+  <a href="https://github.com/TR-SLimey/E/actions?query=workflow%3ADockerBuild">
+    <img alt="Docker build status" src="https://github.com/TR-SLimey/E/workflows/DockerBuild/badge.svg" />
+  </a>
+  <a href="https://matrix.to/#/#e:an-atom-in.space">
+    <img alt="Matrix" src="https://img.shields.io/matrix/e:an-atom-in.space?server_fqdn=hydrogen.an-atom-in.space" />
+  </a>
+  <a href="https://github.com/TR-SLimey/E/issues">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/TR-SLimey/E" />
+  </a>
+  <a href="https://github.com/TR-SLimey/E/blob/master/LICENSE">
+    <img alt="GitHub" src="https://img.shields.io/github/license/TR-SLimey/E" />
+  </a>
+  <a href="https://github.com/TR-SLimey/E/pulls">
+    <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr-raw/TR-SLimey/E" />
+  </a>
+  <a href="https://github.com/TR-SLimey/E/commits">
+    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/TR-SLimey/E" />
+  </a>
+</p>
 
 ### What is E?
 <table border="0px">
