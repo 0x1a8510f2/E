@@ -4,7 +4,7 @@
     <img alt="Docker build status" src="https://github.com/TR-SLimey/E/workflows/DockerBuild/badge.svg" />
   </a>
   <a href="https://matrix.to/#/#e:an-atom-in.space">
-    <img alt="Matrix" src="https://img.shields.io/matrix/e:an-atom-in.space?server_fqdn=hydrogen.an-atom-in.space" />
+    <img alt="Matrix" src="https://img.shields.io/matrix/e:an-atom-in.space?server_fqdn=matrix-client.matrix.org" />
   </a>
   <a href="https://github.com/TR-SLimey/E/issues">
     <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/TR-SLimey/E" />
