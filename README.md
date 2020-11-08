@@ -1,9 +1,7 @@
-# E
-![DockerBuild](https://github.com/TR-SLimey/E/workflows/DockerBuild/badge.svg)
+# E - Matrix Command & Control
+<img src="https://github.com/TR-SLimey/E/workflows/DockerBuild/badge.svg" alt="Docker build status" />
 
-<br/>
-
-## What is E?
+### What is E?
 <table border="0px">
   <tr>
     <td>
