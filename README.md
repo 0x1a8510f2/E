@@ -9,6 +9,9 @@
   <a href="https://github.com/TR-SLimey/E/issues">
     <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/TR-SLimey/E" />
   </a>
+  <a href="https://github.com/TR-SLimey/E/issues">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues-closed-raw/TR-SLimey/E" />
+  </a>
   <a href="https://github.com/TR-SLimey/E/blob/master/LICENSE">
     <img alt="GitHub" src="https://img.shields.io/github/license/TR-SLimey/E" />
   </a>
@@ -17,6 +20,9 @@
   </a>
   <a href="https://github.com/TR-SLimey/E/commits">
     <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/TR-SLimey/E" />
+  </a>
+  <a href="https://hub.docker.com/repository/docker/trslimey/e_mc2">
+    <img alt="Docker Stars" src="https://img.shields.io/docker/stars/trslimey/e_mc2" />
   </a>
 </p>
 
