@@ -3,7 +3,7 @@ package esockets
 func init() {
 	var esocket = Esocket{
 		ID: "defaultHttp",
-		BindPort: 1234,
+		BindPorts: []int{8080},
 	}
-	Available = append(Available, esocket)
+	esocket.register()
 }
