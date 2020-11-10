@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ldflags="-X main.VcsCommit=$(git rev-parse --short HEAD) -X 'main.BuildTime=`date`'"
 
