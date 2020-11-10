@@ -5,7 +5,7 @@ RUN echo $'\
 @edge http://dl-cdn.alpinelinux.org/alpine/edge/testing\n\
 @edge http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
 
-RUN apk add --no-cache bash git ca-certificates build-base su-exec olm-dev
+RUN apk add --no-cache git ca-certificates build-base su-exec olm-dev
 
 COPY . /build
 WORKDIR /build
