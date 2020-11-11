@@ -6,6 +6,9 @@ E
 *.so
 *.dylib
 
+# Devel config
+config.yaml
+
 # Test binary, built with `go test -c`
 *.test
 
