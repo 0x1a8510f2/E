@@ -1,12 +1,10 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	//"flag"
 
-	//"github.com/spf13/viper"
 	"github.com/TR-SLimey/E/esockets"
-	//	"maunium.net/go/mautrix"
 )
 
 var (
@@ -20,12 +18,24 @@ var (
 	BuildTime = "unknown_build_time"
 	// Filled by init
 	VersionString = "unknown_version_string"
+
+	// Filled by command line flags
+	viewVersion          bool
+	configLocation       string
+	registrationLocation string
 )
 
 func init() {
 	VersionString = fmt.Sprintf("%s %s %s [%s]", ProjectName, ReleaseVersion, BuildTime, VcsCommit)
 
-	// Config handling (TODO)
+	// Handle command-line flags
+	flag.BoolVar(&viewVersion, "version", false, "Print version and exit")
+	flag.StringVar(&configLocation, "config", "config.yaml", "The location of the configuration file (YAML format)")
+	flag.StringVar(&registrationLocation, "registration", "none", "Where the registration file (YAML config to be placed on the homeserver) should be saved. Values other than `none` imply that the file should be re-/generated")
+	flag.Parse()
+
+	// Check and parse the config (TODO)
+
 }
 
 func main() {
