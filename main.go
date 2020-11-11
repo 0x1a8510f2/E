@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 
 	"github.com/TR-SLimey/E/esockets"
+	"github.com/smallfish/simpleyaml"
 )
 
 var (
@@ -38,16 +38,19 @@ func init() {
 	flag.Parse()
 
 	// Check, read and parse the config (TODO)
-	_, err := ioutil.ReadFile(configLocation)
+	data, err := ioutil.ReadFile(configLocation)
 	if err != nil {
 		log.Fatalf("Could not open config file (%s) for reading! Failed with error: %s", configLocation, err)
-		os.Exit(1)
+	}
+	_, err = simpleyaml.NewYaml(data)
+	if err != nil {
+		log.Fatalf("Could not parse config file (%s). Failed with error: %s", configLocation, err)
 	}
 }
 
 func main() {
 
-	fmt.Println(VersionString)
+	log.Printf("Starting... <%s>", VersionString)
 	println(len(esockets.Available))
 
 }
