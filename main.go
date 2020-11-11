@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/TR-SLimey/E/esockets"
-	"github.com/smallfish/simpleyaml"
+	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -26,6 +26,9 @@ var (
 	viewVersion          bool
 	configLocation       string
 	registrationLocation string
+
+	// Filled when config is read
+	config Config
 )
 
 func init() {
@@ -42,7 +45,7 @@ func init() {
 	if err != nil {
 		log.Fatalf("Could not open config file (%s) for reading! Failed with error: %s", configLocation, err)
 	}
-	_, err = simpleyaml.NewYaml(data)
+	err = yaml.Unmarshal(data, &config)
 	if err != nil {
 		log.Fatalf("Could not parse config file (%s). Failed with error: %s", configLocation, err)
 	}
@@ -50,7 +53,9 @@ func init() {
 
 func main() {
 
-	log.Printf("Starting... <%s>", VersionString)
-	println(len(esockets.Available))
+	// Log some information on start
+	log.Printf("%s starting...", VersionString)
+	log.Printf("Project URL: %s", ProjectUrl)
+	log.Printf("%d esockets available", len(esockets.Available))
 
 }
