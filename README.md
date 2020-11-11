@@ -25,8 +25,9 @@
     <img alt="Docker Stars" src="https://img.shields.io/docker/stars/trslimey/e_mc2" />
   </a>
 </p>
+<br/>
 
-### What is E?
+## What is E?
 <table border="0px">
   <tr>
     <td>
