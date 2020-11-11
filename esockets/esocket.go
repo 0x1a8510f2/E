@@ -17,9 +17,10 @@ type Esocket struct {
 	defining the esocket is a good choice for an ID */
 	ID string
 
-	/* Configuration supported or required by this esocket.
-	TODO - Find appropriate structure for this*/
-	Config int
+	/* Configuration supported or required by this esocket. */
+	Config struct {
+		// TODO - Find appropriate structure for this
+	}
 }
 
 /* Register the esocket in the `Available` map to allow it
