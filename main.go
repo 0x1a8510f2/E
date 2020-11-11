@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 
 	"github.com/TR-SLimey/E/esockets"
 )
@@ -34,8 +37,12 @@ func init() {
 	flag.StringVar(&registrationLocation, "registration", "none", "Where the registration file (YAML config to be placed on the homeserver) should be saved. Values other than `none` imply that the file should be re-/generated")
 	flag.Parse()
 
-	// Check and parse the config (TODO)
-
+	// Check, read and parse the config (TODO)
+	_, err := ioutil.ReadFile(configLocation)
+	if err != nil {
+		log.Fatalf("Could not open config file (%s) for reading! Failed with error: %s", configLocation, err)
+		os.Exit(1)
+	}
 }
 
 func main() {
