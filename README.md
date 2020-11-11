@@ -30,7 +30,7 @@
 ## What is E?
 <table border="0px">
   <tr>
-    <td>
+    <td valign="top">
       <pre>
         <code>
   E = mc²
