@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
+	"reflect"
 
 	"github.com/TR-SLimey/E/esockets"
 	"gopkg.in/yaml.v2"
@@ -24,6 +26,7 @@ var (
 
 	// Filled by command line flags
 	viewVersion          bool
+	printEsockets        bool
 	configLocation       string
 	registrationLocation string
 
@@ -36,9 +39,19 @@ func init() {
 
 	// Handle command-line flags
 	flag.BoolVar(&viewVersion, "version", false, "Print version and exit")
+	flag.BoolVar(&printEsockets, "esockets", false, "Print a space-delimeted list of available esockets and exit")
 	flag.StringVar(&configLocation, "config", "config.yaml", "The location of the configuration file (YAML format)")
 	flag.StringVar(&registrationLocation, "registration", "none", "Where the registration file (YAML config to be placed on the homeserver) should be saved. Values other than `none` imply that the file should be re-/generated")
 	flag.Parse()
+
+	// Handle command-line flags which end the program to save unnecessary run-time
+	if viewVersion {
+		fmt.Printf("%s\n", VersionString)
+		os.Exit(0)
+	} else if printEsockets {
+		fmt.Printf("%+v\n", reflect.ValueOf(esockets.Available).MapKeys())
+		os.Exit(0)
+	}
 
 	// Check, read and parse the config (TODO)
 	data, err := ioutil.ReadFile(configLocation)
