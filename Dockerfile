@@ -27,6 +27,8 @@ COPY --from=builder /build/E /usr/bin/E
 COPY --from=builder /build/example-config.yaml /opt/E/example-config.yaml
 COPY --from=builder /build/docker-run.sh /docker-run.sh
 
+RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/E
+
 VOLUME /data
 
 CMD ["/docker-run.sh"]
