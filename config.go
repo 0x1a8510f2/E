@@ -2,25 +2,27 @@ package main
 
 type Config struct {
 	Matrix struct {
-		AsId       string
-		Address    string
-		BindAddr   string
-		BindPort   int
-		AsToken    string
-		HsToken    string
-		Sudoers    []string
+		AsId      string
+		Address   string
+		BindAddrs []string
+		BindPorts []int
+		AsToken   string
+		HsToken   string
+		Bot       struct {
+			Username        string
+			Displayname     string
+			AvatarUrl       string
+			Sudoers         []string
+			EnabledCommands []string
+			NosudoCommands  []string
+		}
 		Homeserver struct {
-			Address string
-			Domain  string
-		}
-		Provisioning struct {
-			Path         string
-			SharedSecret string
-		}
-		Bot struct {
-			Username    string
-			Displayname string
-			AvatarUrl   string
+			Address      string
+			MxidSuffix   string
+			Provisioning struct {
+				Path         string
+				SharedSecret string
+			}
 		}
 		ManagedUsers struct {
 			UsernameTemplate    string
@@ -28,6 +30,6 @@ type Config struct {
 		}
 	}
 	Esockets struct {
-		// TODO Esocket config
+		ConfDir string
 	}
 }
