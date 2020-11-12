@@ -10,13 +10,13 @@ function fixperms {
 }
 
 # Temporarily commented out for development
-#if [[ ! -f /data/config.yaml ]]; then
-#	cp /opt/E/example-config.yaml /data/config.yaml
-#	echo "Could not find config.yaml"
-#	echo "Copied default config file to /data/config.yaml"
-#	echo "Please edit /data/config.yaml and re-start the container. This will generate a registration file."
-#	exit
-#fi
+if [[ ! -f /data/config.yaml ]]; then
+	cp /opt/E/example-config.yaml /data/config.yaml
+	echo "Could not find config.yaml"
+	echo "Copied default config file to /data/config.yaml"
+	echo "Please edit /data/config.yaml and re-start the container. This will generate a registration file."
+	exit
+fi
 
 #if [[ ! -f /data/registration.yaml ]]; then
 #	/usr/bin/E -g -c /data/config.yaml -r /data/registration.yaml
