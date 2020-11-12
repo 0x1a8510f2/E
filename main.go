@@ -12,12 +12,15 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var (
+const (
 	// Basic info (static)
 	ProjectName = "E"
 	ProjectUrl  = "https://github.com/TR-SLimey/E"
 	// Incremented on release
 	ReleaseVersion = "pre-alpha"
+)
+
+var (
 	// Filled at build time
 	VcsCommit = "unknown_commit"
 	BuildTime = "unknown_build_time"
