@@ -1,5 +1,8 @@
 # E - Matrix Command & Control
 <p align="center">
+  <img alt="E" src="https://user-images.githubusercontent.com/37966924/98878631-588ac980-247b-11eb-897c-7c7e2c8ad1ad.png" />
+</p>
+<p align="center">
   <a href="https://github.com/TR-SLimey/E/actions?query=workflow%3ADockerBuild">
     <img alt="Docker build status" src="https://github.com/TR-SLimey/E/workflows/DockerBuild/badge.svg" />
   </a>
