@@ -1,5 +1,6 @@
 package main
 
+// The skeleton of the E config file
 type Config struct {
 	Matrix struct {
 		AsId      string

@@ -47,7 +47,7 @@ func init() {
 	flag.StringVar(&registrationLocation, "registration", "none", "Where the registration file (YAML config to be placed on the homeserver) should be saved. Values other than `none` imply that the file should be re-/generated")
 	flag.Parse()
 
-	// Handle command-line flags which end the program to save unnecessary run-time
+	// Process command-line flags which end the program to save unnecessary run-time
 	if viewVersion {
 		fmt.Printf("%s\n", VersionString)
 		os.Exit(0)
