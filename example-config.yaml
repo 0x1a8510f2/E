@@ -1,0 +1,120 @@
+# Config options relating to interaction with Matrix.
+matrix:
+
+  # ID of the ApplicationService. This should be unique
+  # to all other appservices on the homeserver.
+  asId: E
+
+  # The address which the homeserver can use to access
+  # this appservice.
+  address: http://example.com:12345
+
+  # The address(es) on which to listen for Matrix
+  # connections. To listen on all available
+  # interfaces/addresses use 0.0.0.0. This setting
+  # is independent to that of esockets.
+  bindAddr: [0.0.0.0]
+
+  # The port(s) on which to listen on for Matrix
+  # connections. This setting is independent to that
+  # of esockets.
+  bindPorts: [8080]
+
+  # The tokens used for authentication between the
+  # homeserver and E. These are automatically
+  # generated when the registration file is created
+  # and generally should not be changed.
+  asToken: <AS_TOKEN>
+  hsToken: <HS_TOKEN>
+
+  # Config options relating to the appservice's bot account.
+  # This is the account which receives commands meant for
+  # the appservice.
+  bot:
+
+    # The localpart of the MXID which should be registered.
+    username: e
+
+    # The displayname for the bot user.
+    displayname: E
+
+    # An mxc URL pointing to an un-encrypted image for the
+    # bot to use as an avatar. This can be acquired by
+    # uploading the avatar to an un-encrypted room and
+    # viewing the source of the message.
+    avatarUrl: mxc://example.com/abcABC
+
+    # A list of the MXIDs with "sudo" access to this
+    # appservice. These users are able to execute
+    # commands marked as admin-only below.
+    sudoers: []
+
+    # A list of commands which are enabled and can be executed
+    # by the bot user. By default these commands are sudoer-only
+    # unless explicitly specified in nosudoCommands.
+    # The available options are:
+    # - TODO
+    enabledCommands: []
+
+    # A subset of enabledCommands which any Matrix user can run.
+    nosudoCommands: []
+
+  # Config options relating to the homeserver.
+  homeserver:
+
+    # Where the homeserver is listening for
+    # requests. This should be the actual
+    # homeserver URL, and not the suffix
+    # of its MXIDs (if the server is at
+    # matrix.example.com but the usernames
+    # on the server are @user:example.com
+    # use https://matrix.example.com).
+    address: https://matrix.example.com
+
+    # The suffix of MXIDs on the server
+    # (if the server is at matrix.example.com
+    # but the usernames on the server are
+    # @user:example.com use
+    # example.com).
+    mxidSuffix: example.com
+
+    # Config options relating to the homeserver's
+    # provisioning API.
+    provisioning:
+
+      # The path to the provisioning API.
+      path: /_matrix/provision/v1
+
+      # The shared secret to use to authenticate
+      # with the provisioning API. If set to
+      # "disable", use of this API will be
+      # disabled.
+      sharedSecret: disable
+
+  # Config options relating to users managed by
+  # this appservice.
+  managedUsers:
+
+    # The template for the localpart of MXIDs of
+    # users managed by this appservice. The available
+    # variables are:
+    # - TODO
+    usernameTemplate: e_{{ConnectionId}}
+
+    # The template for the displaynames of users
+    # managed by this appservice. The available
+    # variables are:
+    # - TODO
+    displaynameTemplate: E_{{ConnectionId}}
+
+# Config options relating to the esockets
+esockets:
+
+  # The directory where configs for individual esockets
+  # are stored. This can be an absolute or relative path.
+  # The configs should be in the top level of the
+  # specified directory and should be named like so:
+  # {name of the esocket}.yaml . Missing configs will
+  # disable the esocket. For a list of esockets run E
+  # with the -esockets flag.
+  confDir: "./esocket-conf"
