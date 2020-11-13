@@ -70,6 +70,10 @@ func main() {
 	log.Printf("Project URL: %s", ProjectUrl)
 	log.Printf("%d esockets available", len(esockets.Available))
 
-	fmt.Printf("%v", config)
+	fmt.Printf("%v\n", config)
+
+	for _, es := range esockets.Available {
+		es.Init()
+	}
 
 }
