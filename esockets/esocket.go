@@ -35,9 +35,7 @@ type Esocket struct {
 	onStop func(es *Esocket)
 
 	/* Configuration supported or required by this esocket. */
-	Config struct {
-		// TODO - Find appropriate structure for this
-	}
+	Config struct{}
 }
 
 /* Called when the esocket should prepare for receiving data.
