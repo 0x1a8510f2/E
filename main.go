@@ -8,6 +8,7 @@ import (
 	"os"
 	"reflect"
 
+	"github.com/TR-SLimey/E/configmgr"
 	"github.com/TR-SLimey/E/esockets"
 	"gopkg.in/yaml.v2"
 )
@@ -34,7 +35,7 @@ var (
 	registrationLocation string
 
 	// Filled when config is read
-	config Config
+	config configmgr.Config
 )
 
 func init() {

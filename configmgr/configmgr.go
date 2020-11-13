@@ -1,4 +1,4 @@
-package main
+package configmgr
 
 // The skeleton of the E config file
 type Config struct {
