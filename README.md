@@ -16,7 +16,7 @@
     <img alt="GitHub issues" src="https://img.shields.io/github/issues-closed-raw/TR-SLimey/E" />
   </a>
   <a href="https://github.com/TR-SLimey/E/blob/master/LICENSE">
-    <img alt="GitHub" src="https://img.shields.io/github/license/TR-SLimey/E" />
+    <img alt="License" src="https://img.shields.io/github/license/TR-SLimey/E?color=%233c3" />
   </a>
   <a href="https://github.com/TR-SLimey/E/pulls">
     <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr-raw/TR-SLimey/E" />
