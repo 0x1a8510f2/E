@@ -30,7 +30,7 @@
 </p>
 <br/>
 
-## What is E?
+## What is E? 🤨
 <table border="0px">
   <tr>
     <td valign="top">
@@ -46,13 +46,22 @@
     </td>
     <td valign="top">
       <p>
-        E is a multi-purpose command & control server designed to receive commands through the <a href="https://matrix.org">Matrix</a> chat protocol and forward them to clients. While C&C servers are usually thought of in the context of malware, and E could indeed be used for this purpose, E can also be used for any number of things, such as:
-      </p>
-      <ul>
-        <li>controlling IoT devices via a text message (both on Matrix and also any bridged protocol)</li>
-        <li>administering a large number of devices in business settings</li>
-        <li>sending Matrix messages over any protocol providing there is an E module for it</li>
-      </ul>
+        E is a multi-purpose and multi-protocol command & control server designed to receive commands through the <a href="https://matrix.org">Matrix</a> chat protocol and forward them to clients. It is also specifically designed to be versatile in that it can be used to bridge any data between Matrix and other protocols as long as valid <code>esockets</code> are implemented for that protocol.
     </td>
   </tr>
 </table>
+
+## Why is E? 🤔
+While C&C servers are usually thought of in the context of malware, and E could indeed be used for this purpose (in which case I accept no responsibility for what you do), E can also be used for any number of things, such as:
+- controlling IoT devices via a text message - Matrix is already great at that, but with E, a custom protocol can be implemented to fit specific requirements
+- administering a large number of devices in business settings - E could translate between the protocols of tools you already use and Matrix 
+- sending Matrix messages over any protocol providing there is an esocket for it
+- proxying Matrix traffic, if you want to do that for some reason instead of hosting a homeserver (requires a Matrix CS API esocket)
+
+## When is E? 📅🤔
+What??
+
+## How Tos 🔍
+```
+// TODO
+```
