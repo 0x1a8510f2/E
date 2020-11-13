@@ -119,3 +119,10 @@ esockets:
   # disable the esocket. For a list of esockets run E
   # with the -esockets flag.
   confDir: "./esocket-conf"
+
+  # Whether esockets which failed to initialise should
+  # be fatal. This means that, if an esocket's init
+  # function returns an error, E will exit cleanly.
+  # Otherwise, the esocket that failed to initialise
+  # will be deinitialised and ignored.
+  fatalInitFailures: false
