@@ -7,8 +7,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// The rough layout of the config file
-type ConfigSkeleton struct {
+// The rough layout of the E config file
+type EConfigSkeleton struct {
 	Matrix struct {
 		AsId      string   `yaml:"asId"`
 		Address   string   `yaml:"address"`
@@ -38,12 +38,13 @@ type ConfigSkeleton struct {
 		} `yaml:"managedUsers"`
 	} `yaml:"matrix"`
 	Esockets struct {
-		ConfDir string `yaml:"confDir"`
+		ConfDir           string `yaml:"confDir"`
+		FatalInitFailures bool   `yaml:"fatalInitFailures"`
 	}
 }
 
-func GetConfig(location string) (ConfigSkeleton, error) {
-	var config ConfigSkeleton
+func GetEConfig(location string) (EConfigSkeleton, error) {
+	var config EConfigSkeleton
 
 	data, err := ioutil.ReadFile(location)
 	if err != nil {
