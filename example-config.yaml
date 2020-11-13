@@ -111,7 +111,8 @@ matrix:
 esockets:
 
   # The directory where configs for individual esockets
-  # are stored. This can be an absolute or relative path.
+  # are stored. This can be an absolute or relative path,
+  # but should not include a trailing slash.
   # The configs should be in the top level of the
   # specified directory and should be named like so:
   # {name of the esocket}.yaml . Missing configs will
