@@ -33,7 +33,7 @@ var (
 	registrationLocation string
 
 	// Filled when config is read
-	config configmgr.ConfigSkeleton
+	config configmgr.EConfigSkeleton
 )
 
 func init() {
@@ -57,7 +57,7 @@ func init() {
 
 	// Get the config (automatically check if it's readable and valid)
 	var err error
-	config, err = configmgr.GetConfig(configLocation)
+	config, err = configmgr.GetEConfig(configLocation)
 	if err != nil {
 		log.Fatalf("Error while getting configuration: %s", err.Error())
 	}
