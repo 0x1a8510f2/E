@@ -22,7 +22,7 @@
     <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr-raw/TR-SLimey/E" />
   </a>
   <a href="https://github.com/TR-SLimey/E/commits">
-    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/TR-SLimey/E" />
+    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/TR-SLimey/E?color=%233d3" />
   </a>
   <a href="https://hub.docker.com/repository/docker/trslimey/e_mc2">
     <img alt="Docker Stars" src="https://img.shields.io/docker/stars/trslimey/e_mc2" />
