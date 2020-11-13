@@ -10,35 +10,35 @@ import (
 // The rough layout of the config file
 type ConfigSkeleton struct {
 	Matrix struct {
-		AsId      string
-		Address   string
-		BindAddrs []string
-		BindPorts []int
-		AsToken   string
-		HsToken   string
+		AsId      string   `yaml:"asId"`
+		Address   string   `yaml:"address"`
+		BindAddrs []string `yaml:"bindAddrs"`
+		BindPorts []int    `yaml:"bindPorts"`
+		AsToken   string   `yaml:"asToken"`
+		HsToken   string   `yaml:"hsToken"`
 		Bot       struct {
-			Username        string
-			Displayname     string
-			AvatarUrl       string
-			Sudoers         []string
-			EnabledCommands []string
-			NosudoCommands  []string
-		}
+			Username        string   `yaml:"username"`
+			Displayname     string   `yaml:"displayname"`
+			AvatarUrl       string   `yaml:"avatarUrl"`
+			Sudoers         []string `yaml:"sudoers"`
+			EnabledCommands []string `yaml:"enabledCommands"`
+			NosudoCommands  []string `yaml:"nosudoCommands"`
+		} `yaml:"bot"`
 		Homeserver struct {
-			Address      string
-			MxidSuffix   string
+			Address      string `yaml:"address"`
+			MxidSuffix   string `yaml:"mxidSuffix"`
 			Provisioning struct {
-				Path         string
-				SharedSecret string
-			}
-		}
+				Path         string `yaml:"path"`
+				SharedSecret string `yaml:"sharedSecret"`
+			} `yaml:"provisioning"`
+		} `yaml:"homeserver"`
 		ManagedUsers struct {
-			UsernameTemplate    string
-			DisplaynameTemplate string
-		}
-	}
+			UsernameTemplate    string `yaml:"usernameTemplate"`
+			DisplaynameTemplate string `yaml:"displaynameTemplate"`
+		} `yaml:"managedUsers"`
+	} `yaml:"matrix"`
 	Esockets struct {
-		ConfDir string
+		ConfDir string `yaml:"confDir"`
 	}
 }
 
