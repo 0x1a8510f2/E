@@ -3,14 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"reflect"
 
 	"github.com/TR-SLimey/E/configmgr"
 	"github.com/TR-SLimey/E/esockets"
-	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -35,7 +33,7 @@ var (
 	registrationLocation string
 
 	// Filled when config is read
-	config configmgr.Config
+	config configmgr.ConfigSkeleton
 )
 
 func init() {
@@ -57,14 +55,11 @@ func init() {
 		os.Exit(0)
 	}
 
-	// Check, read and parse the config (TODO)
-	data, err := ioutil.ReadFile(configLocation)
+	// Get the config (automatically check if it's readable and valid)
+	var err error
+	config, err = configmgr.GetConfig(configLocation)
 	if err != nil {
-		log.Fatalf("Could not open config file (%s) for reading! Failed with error: %s", configLocation, err)
-	}
-	err = yaml.Unmarshal(data, &config)
-	if err != nil {
-		log.Fatalf("Could not parse config file (%s). Failed with error: %s", configLocation, err)
+		log.Fatalf("Error while getting configuration: %s", err.Error())
 	}
 }
 
@@ -74,5 +69,7 @@ func main() {
 	log.Printf("%s starting...", VersionString)
 	log.Printf("Project URL: %s", ProjectUrl)
 	log.Printf("%d esockets available", len(esockets.Available))
+
+	fmt.Printf("%v", config)
 
 }
