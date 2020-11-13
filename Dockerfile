@@ -21,7 +21,7 @@ RUN echo $'\
 ENV UID=1255 \
     GID=1255
 
-RUN apk add --no-cache su-exec ca-certificates olm bash curl
+RUN apk add --no-cache su-exec ca-certificates olm curl libcap
 
 COPY --from=builder /build/E /usr/bin/E
 COPY --from=builder /build/example-config.yaml /opt/E/example-config.yaml
