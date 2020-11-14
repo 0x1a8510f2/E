@@ -1,14 +1,16 @@
 package esockets
 
+import "fmt"
+
 /* List of all available esockets. Appended to by calling
 esocket.register(). */
 var Available = make(map[string]*Esocket)
 
 /* What runlevels translate to in human readable format */
-var RunlevelTranslations = [...]string{
-	"uninitialised",
-	"initialised",
-	"running",
+var Runlevels = [...]string{
+	"UNINITIALISED",
+	"INITIALISED",
+	"RUNNING",
 }
 
 /* The data structure of an Esocket. Contains everything
@@ -81,6 +83,19 @@ outputting data. However, the esocket should still hold on
 to its data because it may be started again. */
 func (es *Esocket) Stop() error {
 	return es.onStop(es)
+}
+
+/* Check whether the runlevel of the esocket is as expected */
+func (es *Esocket) CheckRunlevel(expected int) error {
+	// Ensure the expected runlevel is valid to prevent further errors
+	if expected < 0 || expected > len(Runlevels)-1 {
+		return fmt.Errorf("The expected runlevel is invalid.")
+	}
+	// Actually check runlevel
+	if es.Runlevel != expected {
+		return fmt.Errorf("Esocket reports as `%s` but `%s` was expected.", Runlevels[es.Runlevel], Runlevels[expected])
+	}
+	return nil
 }
 
 /* Register the esocket in the `Available` map to allow it
