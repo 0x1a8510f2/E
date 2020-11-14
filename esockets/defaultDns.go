@@ -18,6 +18,9 @@ func init() {
 			}
 			return nil
 		},
+		onDeinit: func(es *Esocket) error {
+			return nil
+		},
 		Config: defaultDns.Config{},
 	}
 	// Register the esocket so that it can be listed and used
