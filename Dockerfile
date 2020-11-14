@@ -25,6 +25,7 @@ RUN apk add --no-cache su-exec ca-certificates olm curl libcap
 
 COPY --from=builder /build/E /usr/bin/E
 COPY --from=builder /build/example-config.yaml /opt/E/example-config.yaml
+COPY --from=builder /build/example-esocket-conf/ /opt/E/example-esocket-conf
 COPY --from=builder /build/docker-run.sh /docker-run.sh
 
 RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/E
