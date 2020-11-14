@@ -1,4 +1,4 @@
-package configmgr
+package confmgr
 
 import (
 	"fmt"
