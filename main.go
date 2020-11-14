@@ -7,7 +7,7 @@ import (
 	"os"
 	"reflect"
 
-	"github.com/TR-SLimey/E/configmgr"
+	"github.com/TR-SLimey/E/confmgr"
 	"github.com/TR-SLimey/E/esockets"
 )
 
@@ -33,7 +33,7 @@ var (
 	registrationLocation string
 
 	// Filled when config is read
-	config configmgr.EConfigSkeleton
+	config confmgr.EConfigSkeleton
 )
 
 func init() {
@@ -57,7 +57,7 @@ func init() {
 
 	// Get the config (automatically check if it's readable and valid)
 	var err error
-	config, err = configmgr.GetEConfig(configLocation)
+	config, err = confmgr.GetEConfig(configLocation)
 	if err != nil {
 		log.Fatalf("Error while getting configuration: %s", err.Error())
 	}
@@ -68,12 +68,43 @@ func main() {
 	// Log some information on start
 	log.Printf("%s starting...", VersionString)
 	log.Printf("Project URL: %s", ProjectUrl)
-	log.Printf("%d esockets available", len(esockets.Available))
+	log.Printf("%d esocket(s) available", len(esockets.Available))
 
-	fmt.Printf("%v\n", config)
+	// Initialise esockets synchronously, and process errors if any
+	for esName, es := range esockets.Available {
+		log.Printf("Initialising `%s` esocket", esName)
 
-	for _, es := range esockets.Available {
-		es.Init()
+		err := es.Init(config.Esockets.ConfDir + "/" + esName + ".yaml")
+		if err != nil {
+			if config.Esockets.FatalInitFailures {
+				log.Fatalf("Error while initialising `%s` esocket: %s", esName, err.Error())
+			} else {
+
+				log.Printf("Error while initialising `%s` esocket. This esocket will be deinitialised. Error: %s", esName, err.Error())
+
+				// Attempt to deinitialise esocket to save resources. Failures are expected.
+				err := es.Deinit()
+				if err != nil {
+					log.Printf("Deinitialising `%s` esocket failed with error: %s", esName, err.Error())
+				}
+			}
+		} else {
+			// Ensure that the esocket correctly reports as initialised
+			err := es.CheckRunlevel(1)
+			if err != nil {
+				if config.Esockets.FatalInitFailures {
+					log.Fatalf("Error while initialising `%s` esocket: %s", esName, err)
+				} else {
+					log.Printf("Error while initialising `%s` esocket. This esocket will be deinitialised. Error: %s", esName, err)
+
+					// Attempt to deinitialise esocket to save resources. Failures are expected.
+					err := es.Deinit()
+					if err != nil {
+						log.Printf("Deinitialising `%s` esocket failed with error: %s", esName, err.Error())
+					}
+				}
+			}
+		}
 	}
 
 }
