@@ -8,7 +8,7 @@ E
 
 # Devel config
 config.yaml
-./esocket-conf
+esocket-conf/*
 
 # Test binary, built with `go test -c`
 *.test
