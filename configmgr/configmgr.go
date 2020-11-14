@@ -58,3 +58,17 @@ func GetEConfig(location string) (EConfigSkeleton, error) {
 
 	return config, nil
 }
+
+func GetEsocketConfig(location string, confVarPtr *struct{}) error {
+	data, err := ioutil.ReadFile(location)
+	if err != nil {
+		return fmt.Errorf("Could not open config file (%s) for reading! Failed with error: %s", location, err)
+	}
+
+	err = yaml.Unmarshal(data, confVarPtr)
+	if err != nil {
+		return fmt.Errorf("Could not parse config file (%s). Failed with error: %s", location, err)
+	}
+
+	return nil
+}
