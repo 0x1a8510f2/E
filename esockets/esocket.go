@@ -1,6 +1,10 @@
 package esockets
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/TR-SLimey/E/strings"
+)
 
 /* List of all available esockets. Appended to by calling
 esocket.register(). */
@@ -89,11 +93,11 @@ func (es *Esocket) Stop() error {
 func (es *Esocket) CheckRunlevel(expected int) error {
 	// Ensure the expected runlevel is valid to prevent further errors
 	if expected < 0 || expected > len(Runlevels)-1 {
-		return fmt.Errorf("The expected runlevel is invalid.")
+		return fmt.Errorf(strings.INVALID_EXPECTED_RUNLEVEL)
 	}
 	// Actually check runlevel
 	if es.Runlevel != expected {
-		return fmt.Errorf("Esocket reports as `%s` but `%s` was expected.", Runlevels[es.Runlevel], Runlevels[expected])
+		return fmt.Errorf(strings.UNEXPECTED_RUNLEVEL_ERR, Runlevels[es.Runlevel], Runlevels[expected])
 	}
 	return nil
 }

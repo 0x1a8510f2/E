@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	"github.com/TR-SLimey/E/strings"
 	"gopkg.in/yaml.v3"
 )
 
@@ -48,12 +49,12 @@ func GetEConfig(location string) (EConfigSkeleton, error) {
 
 	data, err := ioutil.ReadFile(location)
 	if err != nil {
-		return config, fmt.Errorf("Could not open config file (%s) for reading! Failed with error: %s", location, err)
+		return config, fmt.Errorf(strings.CONFIG_FILE_OPEN_ERR, location, err)
 	}
 
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
-		return config, fmt.Errorf("Could not parse config file (%s). Failed with error: %s", location, err)
+		return config, fmt.Errorf(strings.CONFIG_FILE_PARSE_ERR, location, err)
 	}
 
 	return config, nil
@@ -62,12 +63,12 @@ func GetEConfig(location string) (EConfigSkeleton, error) {
 func GetEsocketConfig(location string, confVarPtr *struct{}) error {
 	data, err := ioutil.ReadFile(location)
 	if err != nil {
-		return fmt.Errorf("Could not open config file (%s) for reading! Failed with error: %s", location, err)
+		return fmt.Errorf(strings.CONFIG_FILE_OPEN_ERR, location, err)
 	}
 
 	err = yaml.Unmarshal(data, confVarPtr)
 	if err != nil {
-		return fmt.Errorf("Could not parse config file (%s). Failed with error: %s", location, err)
+		return fmt.Errorf(strings.CONFIG_FILE_PARSE_ERR, location, err)
 	}
 
 	return nil
