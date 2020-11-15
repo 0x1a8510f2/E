@@ -3,7 +3,7 @@ package esockets
 import (
 	"fmt"
 
-	"github.com/TR-SLimey/E/strings"
+	sr "github.com/TR-SLimey/E/stringres"
 )
 
 /* List of all available esockets. Appended to by calling
@@ -96,11 +96,11 @@ func (es *Esocket) Stop() error {
 func (es *Esocket) CheckRunlevel(expected int) error {
 	// Ensure the expected runlevel is valid to prevent further errors
 	if expected < 0 || expected > len(Runlevels)-1 {
-		return fmt.Errorf(strings.INVALID_EXPECTED_RUNLEVEL)
+		return fmt.Errorf(sr.INVALID_EXPECTED_RUNLEVEL)
 	}
 	// Actually check runlevel
 	if es.Runlevel != expected {
-		return fmt.Errorf(strings.UNEXPECTED_RUNLEVEL_ERR, Runlevels[es.Runlevel], Runlevels[expected])
+		return fmt.Errorf(sr.UNEXPECTED_RUNLEVEL_ERR, Runlevels[es.Runlevel], Runlevels[expected])
 	}
 	return nil
 }
