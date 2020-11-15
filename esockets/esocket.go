@@ -77,7 +77,7 @@ func (es *Esocket) Deinit() error {
 }
 
 /* Called when the esocket should start receiving
-and outputting data. Runs asynchronously. */
+and outputting data. */
 func (es *Esocket) Start() error {
 	return es.onStart(es)
 }

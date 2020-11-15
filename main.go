@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"reflect"
@@ -11,6 +10,7 @@ import (
 
 	"github.com/TR-SLimey/E/confmgr"
 	"github.com/TR-SLimey/E/esockets"
+	log "github.com/TR-SLimey/E/shim/log"
 	"github.com/TR-SLimey/E/strings"
 )
 
@@ -51,7 +51,7 @@ func doCleanExit() {
 	// Wait for signal while running in the background
 	<-exitSignalChan
 
-	log.Println(strings.CLEAN_EXIT)
+	log.Infof(strings.CLEAN_EXIT)
 
 	// Handle follow-up signals to allow force-exit
 	go func() {
@@ -66,7 +66,7 @@ func doCleanExit() {
 
 			err := es.Stop()
 			if err != nil {
-				log.Printf(strings.ESOCKET_STOP_ERR_NON_FATAL, es.ID, err.Error())
+				log.Errorf(strings.ESOCKET_STOP_ERR_NON_FATAL, es.ID, err.Error())
 			}
 		}
 	}
@@ -94,6 +94,9 @@ func init() {
 		os.Exit(0)
 	}
 
+	// Create logger
+	log.Init(os.Stdout)
+
 	// Register signal handler to exit gracefully
 	signal.Notify(
 		exitSignalChan,
@@ -114,13 +117,13 @@ func init() {
 func main() {
 
 	// Log some information on start
-	log.Printf(strings.STARTING_WITH_VERSION_STRING, VersionString)
-	log.Printf(strings.PROJECT_URL, ProjectUrl)
-	log.Printf(strings.ESOCKETS_AVAILABLE_COUNT, len(esockets.Available))
+	log.Infof(strings.STARTING_WITH_VERSION_STRING, VersionString)
+	log.Infof(strings.PROJECT_URL, ProjectUrl)
+	log.Infof(strings.ESOCKETS_AVAILABLE_COUNT, len(esockets.Available))
 
 	// Initialise esockets synchronously, and process errors if any
 	for _, es := range esockets.Available {
-		log.Printf(strings.ESOCKET_INIT, es.ID)
+		log.Infof(strings.ESOCKET_INIT, es.ID)
 
 		err := es.Init(config.Esockets.ConfDir + "/" + es.ID + ".yaml")
 		if err == nil {
@@ -128,28 +131,29 @@ func main() {
 			err := es.CheckRunlevel(1)
 			if err != nil {
 				if config.Esockets.FatalInitFailures {
-					log.Fatalf(strings.ESOCKET_INIT_ERR_FATAL, es.ID, err.Error())
+					log.Errorf(strings.ESOCKET_INIT_ERR_FATAL, es.ID, err.Error())
+					triggerCleanExit()
 				} else {
-					log.Printf(strings.ESOCKET_INIT_ERR_NON_FATAL, es.ID, err)
+					log.Warnf(strings.ESOCKET_INIT_ERR_NON_FATAL, es.ID, err)
 
 					// Attempt to deinitialise esocket to save resources. Failures are expected.
 					err := es.Deinit()
 					if err != nil {
-						log.Printf(strings.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
+						log.Errorf(strings.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
 					}
 				}
 			}
 		} else {
 			if config.Esockets.FatalInitFailures {
-				log.Fatalf(strings.ESOCKET_INIT_ERR_FATAL, es.ID, err.Error())
+				log.Errorf(strings.ESOCKET_INIT_ERR_FATAL, es.ID, err.Error())
+				triggerCleanExit()
 			} else {
-
-				log.Printf(strings.ESOCKET_INIT_ERR_NON_FATAL, es.ID, err.Error())
+				log.Warnf(strings.ESOCKET_INIT_ERR_NON_FATAL, es.ID, err.Error())
 
 				// Attempt to deinitialise esocket to save resources. Failures are expected.
 				err := es.Deinit()
 				if err != nil {
-					log.Printf(strings.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
+					log.Errorf(strings.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
 				}
 			}
 		}
@@ -157,38 +161,26 @@ func main() {
 
 	// Asynchronously start the esockets, and process errors if any
 	for _, es := range esockets.Available {
-		log.Printf(strings.ESOCKET_START, es.ID)
+		log.Infof(strings.ESOCKET_START, es.ID)
 
-		err := es.Init(config.Esockets.ConfDir + "/" + es.ID + ".yaml")
-		if err == nil {
-			// Ensure that the esocket correctly reports as initialised
-			err := es.CheckRunlevel(1)
-			if err != nil {
-				if config.Esockets.FatalInitFailures {
-					log.Fatalf(strings.ESOCKET_START_ERR_FATAL, es.ID, err.Error())
-				} else {
-					log.Printf(strings.ESOCKET_START_ERR_NON_FATAL, es.ID, err)
+		go es.Start()
 
-					// Attempt to deinitialise esocket to save resources. Failures are expected.
-					err := es.Deinit()
-					if err != nil {
-						log.Printf(strings.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
-					}
-				}
-			}
-		} else {
+		// Ensure that the esocket correctly reports as started
+		err := es.CheckRunlevel(2)
+		if err != nil {
 			if config.Esockets.FatalInitFailures {
-				log.Fatalf(strings.ESOCKET_START_ERR_FATAL, es.ID, err.Error())
+				log.Errorf(strings.ESOCKET_START_ERR_FATAL, es.ID, err.Error())
+				triggerCleanExit()
 			} else {
-
-				log.Printf(strings.ESOCKET_START_ERR_NON_FATAL, es.ID, err.Error())
+				log.Errorf(strings.ESOCKET_START_ERR_NON_FATAL, es.ID, err)
 
 				// Attempt to deinitialise esocket to save resources. Failures are expected.
 				err := es.Deinit()
 				if err != nil {
-					log.Printf(strings.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
+					log.Errorf(strings.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
 				}
 			}
 		}
+
 	}
 }
