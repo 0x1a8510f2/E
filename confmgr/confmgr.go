@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 
 	yaml "github.com/TR-SLimey/E/shim/yaml"
-	"github.com/TR-SLimey/E/strings"
+	sr "github.com/TR-SLimey/E/stringres"
 )
 
 // The rough layout of the E config file
@@ -49,12 +49,12 @@ func GetEConfig(location string) (EConfigSkeleton, error) {
 
 	data, err := ioutil.ReadFile(location)
 	if err != nil {
-		return config, fmt.Errorf(strings.CONFIG_FILE_OPEN_ERR, location, err)
+		return config, fmt.Errorf(sr.CONFIG_FILE_OPEN_ERR, location, err)
 	}
 
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
-		return config, fmt.Errorf(strings.CONFIG_FILE_PARSE_ERR, location, err)
+		return config, fmt.Errorf(sr.CONFIG_FILE_PARSE_ERR, location, err)
 	}
 
 	return config, nil
@@ -63,12 +63,12 @@ func GetEConfig(location string) (EConfigSkeleton, error) {
 func GetEsocketConfig(location string, confVarPtr *struct{}) error {
 	data, err := ioutil.ReadFile(location)
 	if err != nil {
-		return fmt.Errorf(strings.CONFIG_FILE_OPEN_ERR, location, err)
+		return fmt.Errorf(sr.CONFIG_FILE_OPEN_ERR, location, err)
 	}
 
 	err = yaml.Unmarshal(data, confVarPtr)
 	if err != nil {
-		return fmt.Errorf(strings.CONFIG_FILE_PARSE_ERR, location, err)
+		return fmt.Errorf(sr.CONFIG_FILE_PARSE_ERR, location, err)
 	}
 
 	return nil
