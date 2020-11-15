@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	yaml "github.com/TR-SLimey/E/shim/yaml"
 	"github.com/TR-SLimey/E/strings"
-	"gopkg.in/yaml.v3"
 )
 
 // The rough layout of the E config file
