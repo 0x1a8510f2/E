@@ -21,7 +21,12 @@ const (
 	ESOCKET_INIT                 = "Initialising `%s` esocket"
 	ESOCKET_INIT_ERR_FATAL       = "Error while initialising `%s` esocket: %s"
 	ESOCKET_INIT_ERR_NON_FATAL   = "Error while initialising `%s` esocket. This esocket will be deinitialised. Error: %s"
+	ESOCKET_DEINIT_ERR_FATAL     = "Deinitialising `%s` esocket failed with error: %s"
 	ESOCKET_DEINIT_ERR_NON_FATAL = "Deinitialising `%s` esocket failed with error: %s"
+	ESOCKET_START_ERR_FATAL      = ""
+	ESOCKET_START_ERR_NON_FATAL  = ""
+	ESOCKET_STOP_ERR_FATAL       = ""
+	ESOCKET_STOP_ERR_NON_FATAL   = "Stopping `%s` esocket failed with error: %s"
 
 	CONFIG_FILE_OPEN_ERR  = "Could not open config file (%s) for reading! Failed with error: %s"
 	CONFIG_FILE_PARSE_ERR = "Could not parse config file (%s). Failed with error: %s"
@@ -30,4 +35,7 @@ const (
 	UNEXPECTED_RUNLEVEL_ERR   = "Esocket reports as `%s` but `%s` was expected."
 
 	ESOCKET_CONFIG_READ_ERR = "Error reading esocket (%s) config: %s"
+
+	CLEAN_EXIT = "Exiting Cleanly..."
+	FORCE_EXIT = "Forcing Exit!"
 )
