@@ -127,8 +127,11 @@ func main() {
 	// the same code so putting it in a loop and running it twice
 	// makes sense
 	for _, action := range [2]string{sr.ESOCKET_INITIALISING, sr.ESOCKET_STARTING} {
+
+		// For each esocket being initialised or started depending on $action
 		for _, es := range esockets.Available {
 			log.Infof("%s `%s` esocket", strings.Title(action), es.ID)
+
 			var err error
 			if action == sr.ESOCKET_INITIALISING {
 				err = es.Init(config.Esockets.ConfDir + "/" + es.ID + ".yaml")
@@ -143,56 +146,37 @@ func main() {
 				} else {
 					err = es.CheckRunlevel(2)
 				}
-				if err != nil {
-					if config.Esockets.FatalInitFailures {
-						if i == 0 {
-							log.Errorf(sr.ESOCKET_INIT_ERR_FATAL, es.ID, err.Error())
-						} else {
-							log.Errorf(sr.ESOCKET_START_ERR_FATAL, es.ID, err.Error())
-						}
-						triggerCleanExit()
-					} else {
-						if i == 0 {
-							log.Warnf(sr.ESOCKET_INIT_ERR_NON_FATAL, es.ID, err)
-						} else {
-							log.Warnf(sr.ESOCKET_START_ERR_NON_FATAL, es.ID, err)
-						}
-
-						if i == 0 {
-							err = es.Stop()
-							if err != nil {
-								log.Errorf(sr.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
-							}
-						}
-						// Attempt to deinitialise esocket to save resources. Failures are expected.
-						err = es.Deinit()
-						if err != nil {
-							log.Errorf(sr.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
-						}
-					}
+				if err == nil {
+					// No errors have occured so move on to next esocket
+					continue
 				}
-			} else {
-				if config.Esockets.FatalInitFailures {
-					if i == 0 {
-						log.Errorf(sr.ESOCKET_INIT_ERR_FATAL, es.ID, err.Error())
-					} else {
-						log.Errorf(sr.ESOCKET_START_ERR_FATAL, es.ID, err.Error())
-					}
-					triggerCleanExit()
-				} else {
-					log.Warnf(sr.ESOCKET_INIT_ERR_NON_FATAL, es.ID, err.Error())
+			}
 
-					if i == 0 {
-						err = es.Stop()
-						if err != nil {
-							log.Errorf(sr.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
-						}
-					}
-					// Attempt to deinitialise esocket to save resources. Failures are expected.
-					err = es.Deinit()
+			// We haven't hit the continue above so an error has occured
+			if config.Esockets.FatalInitFailures {
+				if action == sr.ESOCKET_INITIALISING {
+					log.Errorf(sr.ESOCKET_INIT_ERR_FATAL, es.ID, err.Error())
+				} else {
+					log.Errorf(sr.ESOCKET_START_ERR_FATAL, es.ID, err.Error())
+				}
+				triggerCleanExit()
+			} else {
+				if action == sr.ESOCKET_INITIALISING {
+					log.Warnf(sr.ESOCKET_INIT_ERR_NON_FATAL, es.ID, err)
+				} else {
+					log.Warnf(sr.ESOCKET_START_ERR_NON_FATAL, es.ID, err)
+				}
+
+				if action == sr.ESOCKET_INITIALISING {
+					err = es.Stop()
 					if err != nil {
 						log.Errorf(sr.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
 					}
+				}
+				// Attempt to deinitialise esocket to save resources. Failures are expected.
+				err = es.Deinit()
+				if err != nil {
+					log.Errorf(sr.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
 				}
 			}
 		}
