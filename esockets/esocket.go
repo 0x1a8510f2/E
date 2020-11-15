@@ -60,6 +60,9 @@ type Esocket struct {
 	/* This function should cleanly stop the onStart function. */
 	onStop func(es *Esocket) error
 
+	/* */
+	Run func(es *Esocket)
+
 	/* Configuration supported or required by this esocket. */
 	Config struct{}
 }
