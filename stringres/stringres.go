@@ -1,4 +1,4 @@
-package strings
+package stringres
 
 const (
 	UNKNOWN_COMMIT         = "unknown_commit"
@@ -17,6 +17,9 @@ const (
 	STARTING_WITH_VERSION_STRING = "%s starting..."
 	PROJECT_URL                  = "Project URL: %s"
 	ESOCKETS_AVAILABLE_COUNT     = "%d esocket(s) available"
+
+	ESOCKET_INITIALISING = "initialising"
+	ESOCKET_STARTING     = "starting"
 
 	ESOCKET_INIT                 = "Initialising `%s` esocket"
 	ESOCKET_INIT_ERR_FATAL       = "Error while initialising `%s` esocket: %s"
