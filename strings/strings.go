@@ -20,11 +20,12 @@ const (
 
 	ESOCKET_INIT                 = "Initialising `%s` esocket"
 	ESOCKET_INIT_ERR_FATAL       = "Error while initialising `%s` esocket: %s"
-	ESOCKET_INIT_ERR_NON_FATAL   = "Error while initialising `%s` esocket. This esocket will be deinitialised. Error: %s"
+	ESOCKET_INIT_ERR_NON_FATAL   = "Error while initialising `%s` esocket. This esocket will be deinitialised and ignored. Error: %s"
 	ESOCKET_DEINIT_ERR_FATAL     = "Deinitialising `%s` esocket failed with error: %s"
 	ESOCKET_DEINIT_ERR_NON_FATAL = "Deinitialising `%s` esocket failed with error: %s"
-	ESOCKET_START_ERR_FATAL      = ""
-	ESOCKET_START_ERR_NON_FATAL  = ""
+	ESOCKET_START                = "Starting `%s` esocket"
+	ESOCKET_START_ERR_FATAL      = "Error while starting `%s` esocket: %s"
+	ESOCKET_START_ERR_NON_FATAL  = "Error while starting `%s` esocket. This esocket will be deinitialised and ignored. Error: %s"
 	ESOCKET_STOP_ERR_FATAL       = ""
 	ESOCKET_STOP_ERR_NON_FATAL   = "Stopping `%s` esocket failed with error: %s"
 

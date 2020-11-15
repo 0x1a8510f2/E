@@ -155,4 +155,40 @@ func main() {
 		}
 	}
 
+	// Asynchronously start the esockets, and process errors if any
+	for _, es := range esockets.Available {
+		log.Printf(strings.ESOCKET_START, es.ID)
+
+		err := es.Init(config.Esockets.ConfDir + "/" + es.ID + ".yaml")
+		if err == nil {
+			// Ensure that the esocket correctly reports as initialised
+			err := es.CheckRunlevel(1)
+			if err != nil {
+				if config.Esockets.FatalInitFailures {
+					log.Fatalf(strings.ESOCKET_START_ERR_FATAL, es.ID, err.Error())
+				} else {
+					log.Printf(strings.ESOCKET_START_ERR_NON_FATAL, es.ID, err)
+
+					// Attempt to deinitialise esocket to save resources. Failures are expected.
+					err := es.Deinit()
+					if err != nil {
+						log.Printf(strings.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
+					}
+				}
+			}
+		} else {
+			if config.Esockets.FatalInitFailures {
+				log.Fatalf(strings.ESOCKET_START_ERR_FATAL, es.ID, err.Error())
+			} else {
+
+				log.Printf(strings.ESOCKET_START_ERR_NON_FATAL, es.ID, err.Error())
+
+				// Attempt to deinitialise esocket to save resources. Failures are expected.
+				err := es.Deinit()
+				if err != nil {
+					log.Printf(strings.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
+				}
+			}
+		}
+	}
 }
