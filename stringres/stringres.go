@@ -23,10 +23,11 @@ const (
 	ESOCKET_ACTION_STOPPING       = "stopping"
 	ESOCKET_ACTION_DEINITIALISING = "deinitialising"
 
-	ESOCKET_ERR_FATAL            = "Fatal error while %s `%s` esocket: %s"
-	ESOCKET_ERR_NON_FATAL        = "Error while %s `%s` esocket. This esocket will be deinitialised and ignored. Error: %s"
-	ESOCKET_ERR_GENERIC          = "Error while %s `%s` esocket: %s"
-	INITIALISING_IS_STARTING_ERR = "A terrible mistake has occured and initialising is the same as starting :O"
+	ESOCKET_ERR_FATAL              = "Fatal error while %s `%s` esocket: %s"
+	ESOCKET_ERR_NON_FATAL          = "Error while %s `%s` esocket. This esocket will be deinitialised and ignored. Error: %s"
+	ESOCKET_ERR_GENERIC            = "Error while %s `%s` esocket: %s"
+	INITIALISING_IS_STARTING_ERR   = "A terrible mistake has occured and initialising is the same as starting :O"
+	STOPPING_IS_DEINITIALISING_ERR = "A terrible mistake has occured and stopping is the same as deinitialising :O"
 
 	CONFIG_FILE_OPEN_ERR  = "Could not open config file (%s) for reading! Failed with error: %s"
 	CONFIG_FILE_PARSE_ERR = "Could not parse config file (%s). Failed with error: %s"
@@ -36,6 +37,7 @@ const (
 
 	ESOCKET_CONFIG_READ_ERR = "Error reading esocket (%s) config: %s"
 
-	CLEAN_EXIT = "Exiting Cleanly..."
-	FORCE_EXIT = "Forcing Exit!"
+	CLEAN_EXIT      = "Exiting Cleanly..."
+	CLEAN_EXIT_DONE = "Exit"
+	FORCE_EXIT      = "Forcing Exit!"
 )

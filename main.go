@@ -48,7 +48,7 @@ func triggerCleanExit() {
 	exitSignalChan <- syscall.SIGHUP
 }
 
-func doCleanExit() {
+func setupCleanExit() {
 	// Wait for signal while running in the background
 	<-exitSignalChan
 
@@ -60,19 +60,39 @@ func doCleanExit() {
 		log.Fatalf(sr.FORCE_EXIT)
 	}()
 
-	// Stop running esockets
-	for _, es := range esockets.Available {
-		err := es.CheckRunlevel(2)
-		if err == nil {
+	// Ensure that the action strings haven't been tweaked to be
+	// the same because that breaks some of the logic
+	if sr.ESOCKET_ACTION_INITIALISING == sr.ESOCKET_ACTION_STARTING {
+		log.Fatalf(sr.STOPPING_IS_DEINITIALISING_ERR)
+	}
 
-			err := es.Stop()
-			if err != nil {
-				log.Errorf(sr.ESOCKET_ERR_NON_FATAL, sr.ESOCKET_ACTION_STOPPING, es.ID, err.Error())
+	// Stop and deinitialise running esockets
+	for _, action := range [2]string{sr.ESOCKET_ACTION_STOPPING, sr.ESOCKET_ACTION_DEINITIALISING} {
+
+		// For each esocket being stopped or deinitialised depending on $action
+		for _, es := range esockets.Available {
+			var err error
+			if action == sr.ESOCKET_ACTION_STOPPING {
+				err = es.CheckRunlevel(2)
+			} else {
+				err = es.CheckRunlevel(1)
+			}
+			// If err is nil, the current esocket is to have $action performed on it
+			if err == nil {
+				if action == sr.ESOCKET_ACTION_STOPPING {
+					err = es.Stop()
+				} else {
+					err = es.Deinit()
+				}
+
+				if err != nil {
+					log.Errorf(sr.ESOCKET_ERR_GENERIC, action, es.ID, err.Error())
+				}
 			}
 		}
 	}
 
-	// Deinitialise initialised esockets
+	log.Infof(sr.CLEAN_EXIT_DONE)
 	os.Exit(0)
 }
 
@@ -86,7 +106,7 @@ func init() {
 	flag.StringVar(&registrationLocation, "registration", "none", sr.FLAG_HELP_REGISTRATION)
 	flag.Parse()
 
-	// Process command-line flags which end the program to save unnecessary run-time
+	// Process command-line flags which instantly exit to save unnecessary run-time
 	if viewVersion {
 		fmt.Printf("%s\n", VersionString)
 		os.Exit(0)
@@ -105,7 +125,7 @@ func init() {
 		syscall.SIGINT,  // kill -SIGINT XXXX or Ctrl+c
 		syscall.SIGQUIT, // kill -SIGQUIT XXXX
 	)
-	go doCleanExit()
+	go setupCleanExit()
 
 	// Get the config (automatically check if it's readable and valid)
 	var err error
@@ -122,15 +142,17 @@ func main() {
 	log.Infof(sr.PROJECT_URL, ProjectUrl)
 	log.Infof(sr.ESOCKETS_AVAILABLE_COUNT, len(esockets.Available))
 
-	// Initialise and start esockets
-	// Both initialisation and starting of esockets are essentially
-	// the same code so putting it in a loop and running it twice
-	// makes sense
+	/* Initialise and start esockets
+	Both initialisation and starting of esockets are essentially
+	the same code so putting it in a loop and running it twice
+	makes sense. */
+
 	// First, ensure that the strings haven't been tweaked to be
 	// the same because that breaks some of the logic
 	if sr.ESOCKET_ACTION_INITIALISING == sr.ESOCKET_ACTION_STARTING {
 		log.Fatalf(sr.INITIALISING_IS_STARTING_ERR)
 	}
+	// Run the actual loop
 	for _, action := range [2]string{sr.ESOCKET_ACTION_INITIALISING, sr.ESOCKET_ACTION_STARTING} {
 
 		// For each esocket being initialised or started depending on $action
