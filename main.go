@@ -67,7 +67,7 @@ func doCleanExit() {
 
 			err := es.Stop()
 			if err != nil {
-				log.Errorf(sr.ESOCKET_STOP_ERR_NON_FATAL, es.ID, err.Error())
+				log.Errorf(sr.ESOCKET_ERR_NON_FATAL, sr.ESOCKET_ACTION_STOPPING, es.ID, err.Error())
 			}
 		}
 	}
@@ -126,14 +126,19 @@ func main() {
 	// Both initialisation and starting of esockets are essentially
 	// the same code so putting it in a loop and running it twice
 	// makes sense
-	for _, action := range [2]string{sr.ESOCKET_INITIALISING, sr.ESOCKET_STARTING} {
+	// First, ensure that the strings haven't been tweaked to be
+	// the same because that breaks some of the logic
+	if sr.ESOCKET_ACTION_INITIALISING == sr.ESOCKET_ACTION_STARTING {
+		log.Fatalf(sr.INITIALISING_IS_STARTING_ERR)
+	}
+	for _, action := range [2]string{sr.ESOCKET_ACTION_INITIALISING, sr.ESOCKET_ACTION_STARTING} {
 
 		// For each esocket being initialised or started depending on $action
 		for _, es := range esockets.Available {
 			log.Infof("%s `%s` esocket", strings.Title(action), es.ID)
 
 			var err error
-			if action == sr.ESOCKET_INITIALISING {
+			if action == sr.ESOCKET_ACTION_INITIALISING {
 				err = es.Init(config.Esockets.ConfDir + "/" + es.ID + ".yaml")
 			} else {
 				err = es.Start()
@@ -141,7 +146,7 @@ func main() {
 
 			if err == nil {
 				// Ensure that the esocket reports the correct runlevel
-				if action == sr.ESOCKET_INITIALISING {
+				if action == sr.ESOCKET_ACTION_INITIALISING {
 					err = es.CheckRunlevel(1)
 				} else {
 					err = es.CheckRunlevel(2)
@@ -154,29 +159,21 @@ func main() {
 
 			// We haven't hit the continue above so an error has occured
 			if config.Esockets.FatalInitFailures {
-				if action == sr.ESOCKET_INITIALISING {
-					log.Errorf(sr.ESOCKET_INIT_ERR_FATAL, es.ID, err.Error())
-				} else {
-					log.Errorf(sr.ESOCKET_START_ERR_FATAL, es.ID, err.Error())
-				}
+				log.Errorf(sr.ESOCKET_ERR_FATAL, action, es.ID, err.Error())
 				triggerCleanExit()
 			} else {
-				if action == sr.ESOCKET_INITIALISING {
-					log.Warnf(sr.ESOCKET_INIT_ERR_NON_FATAL, es.ID, err)
-				} else {
-					log.Warnf(sr.ESOCKET_START_ERR_NON_FATAL, es.ID, err)
-				}
+				log.Warnf(sr.ESOCKET_ERR_NON_FATAL, action, es.ID, err)
 
-				if action == sr.ESOCKET_INITIALISING {
+				if action == sr.ESOCKET_ACTION_STARTING {
 					err = es.Stop()
 					if err != nil {
-						log.Errorf(sr.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
+						log.Errorf(sr.ESOCKET_ERR_GENERIC, sr.ESOCKET_ACTION_STOPPING, es.ID, err.Error())
 					}
 				}
 				// Attempt to deinitialise esocket to save resources. Failures are expected.
 				err = es.Deinit()
 				if err != nil {
-					log.Errorf(sr.ESOCKET_DEINIT_ERR_NON_FATAL, es.ID, err.Error())
+					log.Errorf(sr.ESOCKET_ERR_NON_FATAL, sr.ESOCKET_ACTION_DEINITIALISING, es.ID, err.Error())
 				}
 			}
 		}
