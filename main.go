@@ -10,6 +10,7 @@ import (
 	"syscall"
 
 	"github.com/TR-SLimey/E/confmgr"
+	conftemplate "github.com/TR-SLimey/E/confmgr/template"
 	"github.com/TR-SLimey/E/esockets"
 	"github.com/TR-SLimey/E/matrixsocket"
 	log "github.com/TR-SLimey/E/shim/log"
@@ -38,7 +39,7 @@ var (
 	registrationLocation string
 
 	// Filled when config is read
-	config confmgr.EConfigSkeleton
+	config conftemplate.EConfig
 
 	// Channel for handling exit signals
 	exitSignalChan = make(chan os.Signal, 1)
