@@ -57,7 +57,7 @@
 ## 🤔 Why is E?
 While C&C servers are usually thought of in the context of malware, and E could indeed be used for this purpose (in which case I accept no responsibility for what you do), E can also be used for any number of things, such as:
 - controlling IoT devices via a text message - Matrix is already great at that, but with E, a custom protocol can be implemented to fit specific requirements
-- administering a large number of devices in business settings - E could translate between the protocols of tools you already use and Matrix 
+- administering a large number of devices in business settings - E could translate between the protocols of tools you already use and Matrix
 - sending Matrix messages over any protocol providing there is an esocket for it
 - proxying Matrix traffic, if you want to do that for some reason instead of hosting a homeserver (requires a Matrix CS API esocket)
 
@@ -73,4 +73,4 @@ What??
 
 
 ## 🔗 Links and resources
-- Thanks to [tulir](https://github.com/tulir)'s [mautrix-whatsapp](https://github.com/tulir/mautrix-whatsapp) from which I shamelessly stole a few ideas.
+- Thanks to [tulir](https://github.com/tulir)'s [mautrix-whatsapp](https://github.com/tulir/mautrix-whatsapp) from which I shamelessly stole a few ideas, and [mautrix-go](https://github.com/tulir/mautrix-go) which is the Matrix AppService library used in this project.

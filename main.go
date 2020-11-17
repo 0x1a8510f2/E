@@ -226,7 +226,7 @@ func main() {
 	// Pass data between Matrix and the Esockets
 	// This is an infinite loop which can only end
 	// when a signal is received or if a panic occurs
-	for true {
+	for {
 
 	}
 }

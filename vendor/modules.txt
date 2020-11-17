@@ -1,9 +1,27 @@
+# github.com/gorilla/mux v1.7.4
+github.com/gorilla/mux
 # github.com/sirupsen/logrus v1.7.0
 ## explicit
 github.com/sirupsen/logrus
-# golang.org/x/sys v0.0.0-20191026070338-33540a1f6037
+# golang.org/x/net v0.0.0-20200602114024-627f9648deb9
+golang.org/x/net/html
+golang.org/x/net/html/atom
+# golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd
 golang.org/x/sys/unix
 golang.org/x/sys/windows
+# gopkg.in/yaml.v2 v2.3.0
+gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 ## explicit
 gopkg.in/yaml.v3
+# maunium.net/go/maulogger/v2 v2.1.1
+maunium.net/go/maulogger/v2
+# maunium.net/go/mautrix v0.7.13
+## explicit
+maunium.net/go/mautrix
+maunium.net/go/mautrix/appservice
+maunium.net/go/mautrix/crypto/attachment
+maunium.net/go/mautrix/event
+maunium.net/go/mautrix/id
+maunium.net/go/mautrix/pushrules
+maunium.net/go/mautrix/pushrules/glob
