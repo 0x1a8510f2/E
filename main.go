@@ -211,7 +211,7 @@ func main() {
 
 	// Init and start the E<->Matrix interface
 	log.Infof(sr.MATRIX_SOCKET_INIT)
-	err := matrixsocket.Init()
+	err := matrixsocket.Init(config.Matrix.RegFilePath)
 	if err != nil {
 		log.Errorf(sr.MATRIX_SOCKET_INIT_ERR, err.Error())
 		triggerCleanExit()

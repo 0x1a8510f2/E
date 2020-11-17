@@ -27,6 +27,11 @@ matrix:
   asToken: <AS_TOKEN>
   hsToken: <HS_TOKEN>
 
+  # The path to the registration file (where it should
+  # be placed when generated and where E should look
+  # for it). This can be full or relative.
+  regFilePath: registration.yaml
+
   # Config options relating to the appservice's bot account.
   # This is the account which receives commands meant for
   # the appservice.

@@ -11,13 +11,14 @@ import (
 // The rough layout of the E config file
 type EConfigSkeleton struct {
 	Matrix struct {
-		AsId      string   `yaml:"asId"`
-		Address   string   `yaml:"address"`
-		BindAddrs []string `yaml:"bindAddrs"`
-		BindPorts []int    `yaml:"bindPorts"`
-		AsToken   string   `yaml:"asToken"`
-		HsToken   string   `yaml:"hsToken"`
-		Bot       struct {
+		AsId        string   `yaml:"asId"`
+		Address     string   `yaml:"address"`
+		BindAddrs   []string `yaml:"bindAddrs"`
+		BindPorts   []int    `yaml:"bindPorts"`
+		AsToken     string   `yaml:"asToken"`
+		HsToken     string   `yaml:"hsToken"`
+		RegFilePath string   `yaml:"regFilePath"`
+		Bot         struct {
 			Username        string   `yaml:"username"`
 			Displayname     string   `yaml:"displayname"`
 			AvatarUrl       string   `yaml:"avatarUrl"`
