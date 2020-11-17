@@ -45,15 +45,19 @@ var (
 )
 
 func triggerCleanExit() {
-	// Send a signal down the exit signal channel to trigger doCleanExit
-	exitSignalChan <- syscall.SIGHUP
+	// Send a signal down the exit signal channel to trigger cleanExit
+	exitSignalChan <- syscall.SIGUSR2
 }
 
 func setupCleanExit() {
 	// Wait for signal while running in the background
-	<-exitSignalChan
+	sig := <-exitSignalChan
 
-	log.Infof(sr.CLEAN_EXIT)
+	if sig.String() == "user defined signal 2" {
+		log.Infof(sr.CLEAN_EXIT_TRIGGERED)
+	} else {
+		log.Infof(sr.CLEAN_EXIT_ON_SIGNAL, sig.String())
+	}
 
 	// Handle follow-up signals to allow force-exit
 	go func() {
@@ -72,6 +76,8 @@ func setupCleanExit() {
 
 		// For each esocket being stopped or deinitialised depending on $action
 		for _, es := range esockets.Available {
+			log.Infof("%s `%s` esocket", strings.Title(action), es.ID)
+
 			var err error
 			if action == sr.ESOCKET_ACTION_STOPPING {
 				err = es.CheckRunlevel(2)
@@ -203,11 +209,13 @@ func main() {
 	}
 
 	// Init and start the E<->Matrix interface
+	log.Infof(sr.MATRIX_SOCKET_INIT)
 	err := matrixsocket.Init()
 	if err != nil {
 		log.Errorf(sr.MATRIX_SOCKET_INIT_ERR, err.Error())
 		triggerCleanExit()
 	}
+	log.Infof(sr.MATRIX_SOCKET_START)
 	err = matrixsocket.Start()
 	if err != nil {
 		log.Errorf(sr.MATRIX_SOCKET_START_ERR, err.Error())
