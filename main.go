@@ -11,6 +11,7 @@ import (
 
 	"github.com/TR-SLimey/E/confmgr"
 	"github.com/TR-SLimey/E/esockets"
+	"github.com/TR-SLimey/E/matrixsocket"
 	log "github.com/TR-SLimey/E/shim/log"
 	sr "github.com/TR-SLimey/E/stringres"
 )
@@ -199,5 +200,24 @@ func main() {
 				}
 			}
 		}
+	}
+
+	// Init and start the E<->Matrix interface
+	err := matrixsocket.Init()
+	if err != nil {
+		log.Errorf(sr.MATRIX_SOCKET_INIT_ERR, err.Error())
+		triggerCleanExit()
+	}
+	err = matrixsocket.Start()
+	if err != nil {
+		log.Errorf(sr.MATRIX_SOCKET_START_ERR, err.Error())
+		triggerCleanExit()
+	}
+
+	// Pass data between Matrix and the Esockets
+	// This is an infinite loop which can only end
+	// when a signal is received or if a panic occurs
+	for true {
+
 	}
 }
