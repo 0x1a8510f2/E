@@ -35,10 +35,13 @@ const (
 	INVALID_EXPECTED_RUNLEVEL = "The expected runlevel is invalid."
 	UNEXPECTED_RUNLEVEL_ERR   = "Esocket reports as `%s` but `%s` was expected."
 
+	MATRIX_SOCKET_INIT      = "Initialising Matrix socket"
+	MATRIX_SOCKET_START     = "Starting Matrix socket"
 	MATRIX_SOCKET_INIT_ERR  = "A fatal error has occured while initialising the Matrix Socket: %s"
 	MATRIX_SOCKET_START_ERR = "A fatal error has occured while starting the Matrix Socket: %s"
 
-	CLEAN_EXIT      = "Exiting Cleanly..."
-	CLEAN_EXIT_DONE = "Exit"
-	FORCE_EXIT      = "Received follow-up signal. Forcing exit!"
+	CLEAN_EXIT_ON_SIGNAL = "Signal received (%s). Exiting cleanly..."
+	CLEAN_EXIT_TRIGGERED = "Exit requested by application. Exiting cleanly..."
+	CLEAN_EXIT_DONE      = "Exit"
+	FORCE_EXIT           = "Received follow-up signal. Forcing exit!"
 )
