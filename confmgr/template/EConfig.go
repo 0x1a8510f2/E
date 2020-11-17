@@ -35,3 +35,27 @@ type EConfig struct {
 		FatalInitFailures bool   `yaml:"fatalInitFailures"`
 	}
 }
+
+func (config *EConfig) SetDefaults() {
+	config.Matrix.AsId = "E"
+	config.Matrix.Address = "https://E.example.com:12345"
+	config.Matrix.BindAddrs = []string{"0.0.0.0"}
+	config.Matrix.BindPorts = []int{8080}
+	config.Matrix.AsToken = ""
+	config.Matrix.HsToken = ""
+	config.Matrix.RegFilePath = "registration.yaml"
+	config.Matrix.Bot.Username = "E"
+	config.Matrix.Bot.Displayname = "E"
+	config.Matrix.Bot.AvatarUrl = ""
+	config.Matrix.Bot.Sudoers = []string{}
+	config.Matrix.Bot.EnabledCommands = []string{}
+	config.Matrix.Bot.NosudoCommands = []string{}
+	config.Matrix.Homeserver.Address = "https://matrix.example.com"
+	config.Matrix.Homeserver.MxidSuffix = "example.com"
+	config.Matrix.Homeserver.Provisioning.Path = "/_matrix/provision/v1"
+	config.Matrix.Homeserver.Provisioning.SharedSecret = "disable"
+	config.Matrix.ManagedUsers.UsernameTemplate = "e_{{ConnectionId}}"
+	config.Matrix.ManagedUsers.DisplaynameTemplate = "e_{{ConnectionId}}"
+	config.Esockets.ConfDir = "./esocket-conf"
+	config.Esockets.FatalInitFailures = true
+}
