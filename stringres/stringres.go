@@ -35,8 +35,6 @@ const (
 	INVALID_EXPECTED_RUNLEVEL = "The expected runlevel is invalid."
 	UNEXPECTED_RUNLEVEL_ERR   = "Esocket reports as `%s` but `%s` was expected."
 
-	ESOCKET_CONFIG_READ_ERR = "Error reading esocket (%s) config: %s"
-
 	CLEAN_EXIT      = "Exiting Cleanly..."
 	CLEAN_EXIT_DONE = "Exit"
 	FORCE_EXIT      = "Forcing Exit!"

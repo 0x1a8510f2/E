@@ -12,7 +12,7 @@ func init() {
 			es.Runlevel = 1
 			/*err := confmgr.GetEsocketConfig(confLocation, &es.Config)
 			if err != nil {
-				return fmt.Errorf(strings.ESOCKET_CONFIG_READ_ERR, es.ID, err.Error())
+				return fmt.Errorf("Error reading esocket (%s) config: %s", es.ID, err.Error())
 			}*/
 			return nil
 		},
