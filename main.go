@@ -131,6 +131,7 @@ func init() {
 		syscall.SIGHUP,  // kill -SIGHUP XXXX
 		syscall.SIGINT,  // kill -SIGINT XXXX or Ctrl+c
 		syscall.SIGQUIT, // kill -SIGQUIT XXXX
+		syscall.SIGTERM, // kill XXXX
 	)
 	go setupCleanExit()
 
