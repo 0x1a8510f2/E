@@ -42,7 +42,7 @@ var (
 	config conftemplate.EConfig
 
 	// Channel for handling exit signals
-	exitSignalChan = make(chan os.Signal, 1)
+	exitSignalChan = make(chan os.Signal)
 )
 
 func triggerCleanExit() {
@@ -227,7 +227,14 @@ func main() {
 	// Pass data between Matrix and the Esockets
 	// This is an infinite loop which can only end
 	// when a signal is received or if a panic occurs
-	//for {
-
-	//}
+	for {
+		for _, es := range esockets.Available {
+			select {
+			case data := <-es.CtrlChannel:
+				fmt.Println(data)
+			case data := <-es.DataChannel:
+				fmt.Println(data)
+			}
+		}
+	}
 }
