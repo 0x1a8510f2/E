@@ -77,8 +77,6 @@ func setupCleanExit() {
 
 		// For each esocket being stopped or deinitialised depending on $action
 		for _, es := range esockets.Available {
-			log.Infof("%s `%s` esocket", strings.Title(action), es.ID)
-
 			var err error
 			if action == sr.ESOCKET_ACTION_STOPPING {
 				err = es.CheckRunlevel(2)
@@ -87,6 +85,7 @@ func setupCleanExit() {
 			}
 			// If err is nil, the current esocket is to have $action performed on it
 			if err == nil {
+				log.Infof(sr.ESOCKET_GENERIC_ACTION_DESCRIPTION, strings.Title(action), es.ID)
 				if action == sr.ESOCKET_ACTION_STOPPING {
 					err = es.Stop()
 				} else {
@@ -96,6 +95,8 @@ func setupCleanExit() {
 				if err != nil {
 					log.Errorf(sr.ESOCKET_ERR_GENERIC, action, es.ID, err.Error())
 				}
+			} else {
+				log.Infof(sr.ESOCKET_GENERIC_ACTION_DESCRIPTION, strings.Title(sr.ESOCKET_ACTION_SKIPPING)+" "+action, es.ID)
 			}
 		}
 	}
