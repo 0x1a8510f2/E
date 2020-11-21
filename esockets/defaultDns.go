@@ -1,6 +1,9 @@
 package esockets
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/TR-SLimey/E/esockets/defaultDns"
 )
 
@@ -21,12 +24,26 @@ func init() {
 			return nil
 		},
 		onStart: func(es *Esocket) error {
+			es.runFlag = true
+			go es.Run(es)
 			es.Runlevel = 2
 			return nil
 		},
 		onStop: func(es *Esocket) error {
-			es.Runlevel = 1
+			es.runFlag = false
+			fmt.Println("Waiting for mainloop to exit")
+			for es.Runlevel != 1 {
+				time.Sleep(5 * time.Microsecond)
+			}
 			return nil
+		},
+		Run: func(es *Esocket) {
+			for es.runFlag {
+				time.Sleep(1 * time.Second)
+				fmt.Println("Default DNS Esocket Still Running")
+			}
+			fmt.Println("Default DNS Esocket Has Exit")
+			es.Runlevel = 1
 		},
 		Config: defaultDns.Config{},
 	}
