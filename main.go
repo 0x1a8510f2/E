@@ -12,7 +12,7 @@ import (
 	"github.com/TR-SLimey/E/confmgr"
 	conftemplate "github.com/TR-SLimey/E/confmgr/template"
 	"github.com/TR-SLimey/E/esockets"
-	"github.com/TR-SLimey/E/matrixsocket"
+	"github.com/TR-SLimey/E/mxsocket"
 	log "github.com/TR-SLimey/E/shim/log"
 	sr "github.com/TR-SLimey/E/stringres"
 )
@@ -218,15 +218,16 @@ func main() {
 		}
 	}
 
-	// Init and start the E<->Matrix interface
+	// Init and start the MxSocket (E<->Matrix interface)
 	log.Infof(sr.MATRIX_SOCKET_INIT)
-	err := matrixsocket.Init(config.Matrix.RegFilePath)
+	ms := mxsocket.New()
+	err := ms.Init(config.Matrix.RegFilePath)
 	if err != nil {
 		log.Errorf(sr.MATRIX_SOCKET_INIT_ERR, err.Error())
 		triggerCleanExit()
 	}
 	log.Infof(sr.MATRIX_SOCKET_START)
-	err = matrixsocket.Start()
+	err = ms.Start()
 	if err != nil {
 		log.Errorf(sr.MATRIX_SOCKET_START_ERR, err.Error())
 		triggerCleanExit()
