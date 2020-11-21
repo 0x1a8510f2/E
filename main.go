@@ -152,6 +152,10 @@ func main() {
 	log.Infof(sr.PROJECT_URL, ProjectUrl)
 	log.Infof(sr.ESOCKETS_AVAILABLE_COUNT, len(esockets.Available))
 
+	// Create channels for communication between sockets
+	ctrlChannel := make(chan map[string]string)
+	dataChannel := make(chan map[string]string)
+
 	/* Initialise and start esockets
 	Both initialisation and starting of esockets are essentially
 	the same code so putting it in a loop and running it twice
@@ -171,6 +175,10 @@ func main() {
 
 			var err error
 			if action == sr.ESOCKET_ACTION_INITIALISING {
+				// Inject control and data channels before initialising
+				es.CtrlChannel = ctrlChannel
+				es.DataChannel = dataChannel
+				// Init
 				err = es.Init(config.Esockets.ConfDir + "/" + es.ID + ".yaml")
 			} else {
 				err = es.Start()
@@ -229,13 +237,11 @@ func main() {
 	// This is an infinite loop which can only end
 	// when a signal is received or if a panic occurs
 	for {
-		for _, es := range esockets.Available {
-			select {
-			case data := <-es.CtrlChannel:
-				fmt.Println(data)
-			case data := <-es.DataChannel:
-				fmt.Println(data)
-			}
+		select {
+		case cmd := <-ctrlChannel:
+			fmt.Println(cmd)
+		case data := <-dataChannel:
+			fmt.Println(data)
 		}
 	}
 }

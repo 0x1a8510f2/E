@@ -67,10 +67,10 @@ type Esocket struct {
 	runFlag bool
 
 	/* */
-	CtrlChannel chan string
+	CtrlChannel chan map[string]string
 
 	/* */
-	DataChannel chan string
+	DataChannel chan map[string]string
 
 	/* Configuration supported or required by this esocket. */
 	Config struct{}
