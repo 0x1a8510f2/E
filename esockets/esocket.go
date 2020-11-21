@@ -63,6 +63,15 @@ type Esocket struct {
 	/* */
 	Run func(es *Esocket)
 
+	/* */
+	runFlag bool
+
+	/* */
+	CtrlChannel chan string
+
+	/* */
+	DataChannel chan string
+
 	/* Configuration supported or required by this esocket. */
 	Config struct{}
 }
