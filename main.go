@@ -176,8 +176,7 @@ func main() {
 			var err error
 			if action == sr.ESOCKET_ACTION_INITIALISING {
 				// Inject control and data channels before initialising
-				es.CtrlChannel = ctrlChannel
-				es.DataChannel = dataChannel
+				es.CtrlChannel, es.DataChannel = ctrlChannel, dataChannel
 				// Init
 				err = es.Init(config.Esockets.ConfDir + "/" + es.ID + ".yaml")
 			} else {
