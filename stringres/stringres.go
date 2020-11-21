@@ -42,7 +42,7 @@ const (
 	MATRIX_SOCKET_INIT_ERR  = "A fatal error has occured while initialising the Matrix Socket: %s"
 	MATRIX_SOCKET_START_ERR = "A fatal error has occured while starting the Matrix Socket: %s"
 
-	CLEAN_EXIT_ON_SIGNAL = "Signal received (%s). Exiting cleanly..."
+	CLEAN_EXIT_ON_SIGNAL = "Signal received (%s). Exiting cleanly (re-send to force exit)..."
 	CLEAN_EXIT_TRIGGERED = "Exit requested by application. Exiting cleanly..."
 	CLEAN_EXIT_DONE      = "Exit"
 	FORCE_EXIT           = "Received follow-up signal. Forcing exit!"
