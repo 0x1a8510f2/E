@@ -40,8 +40,7 @@ func init() {
 		Run: func(es *Esocket) {
 			for es.runFlag {
 				time.Sleep(1 * time.Second)
-				es.CtrlChannel <- map[string]string{"ctrl": "works!"}
-				es.DataChannel <- map[string]string{"data": "works!"}
+				es.RecvQueue <- map[string]string{"recv": "works!"}
 			}
 			fmt.Println("Default DNS Esocket Has Exit")
 			es.Runlevel = 1

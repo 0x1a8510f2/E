@@ -7,6 +7,8 @@ import (
 var as *asLib.AppService
 
 type mxSocket struct {
+	SendQueue chan map[string]string
+	RecvQueue chan map[string]string
 }
 
 func (ms *mxSocket) Init(config string) error { /*

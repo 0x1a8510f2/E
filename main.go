@@ -152,9 +152,8 @@ func main() {
 	log.Infof(sr.PROJECT_URL, ProjectUrl)
 	log.Infof(sr.ESOCKETS_AVAILABLE_COUNT, len(esockets.Available))
 
-	// Create channels for communication between sockets
-	ctrlChannel := make(chan map[string]string)
-	dataChannel := make(chan map[string]string)
+	// Create queue (channel) for receiving data from esockets
+	esRecvQueue := make(chan map[string]string)
 
 	/* Initialise and start esockets
 	Both initialisation and starting of esockets are essentially
@@ -175,8 +174,8 @@ func main() {
 
 			var err error
 			if action == sr.ESOCKET_ACTION_INITIALISING {
-				// Inject control and data channels before initialising
-				es.CtrlChannel, es.DataChannel = ctrlChannel, dataChannel
+				// Inject received data queue channel
+				es.RecvQueue = esRecvQueue
 				// Init
 				err = es.Init(config.Esockets.ConfDir + "/" + es.ID + ".yaml")
 			} else {
@@ -238,10 +237,10 @@ func main() {
 	// when a signal is received or if a panic occurs
 	for {
 		select {
-		case cmd := <-ctrlChannel:
-			fmt.Println(cmd)
-		case data := <-dataChannel:
+		case data := <-esRecvQueue:
 			fmt.Println(data)
+		case mxdata := <-ms.RecvQueue:
+			fmt.Println(mxdata)
 		}
 	}
 }
