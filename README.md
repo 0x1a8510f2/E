@@ -16,17 +16,11 @@
   <a href="https://github.com/TR-SLimey/E/issues">
     <img alt="GitHub issues" src="https://img.shields.io/github/issues-closed-raw/TR-SLimey/E" />
   </a>
-  <a href="https://github.com/TR-SLimey/E/blob/master/LICENSE">
-    <img alt="License" src="https://img.shields.io/github/license/TR-SLimey/E?color=%233c3" />
-  </a>
   <a href="https://github.com/TR-SLimey/E/pulls">
     <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr-raw/TR-SLimey/E" />
   </a>
-  <a href="https://github.com/TR-SLimey/E/commits">
-    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/TR-SLimey/E?color=%233d3" />
-  </a>
-  <a href="https://hub.docker.com/repository/docker/trslimey/e_mc2">
-    <img alt="Docker Stars" src="https://img.shields.io/docker/stars/trslimey/e_mc2" />
+  <a href="https://github.com/TR-SLimey/E/blob/master/LICENSE">
+    <img alt="License" src="https://img.shields.io/github/license/TR-SLimey/E?color=%233c3" />
   </a>
 </p>
 <br/>
@@ -48,7 +42,7 @@
     </td>
     <td valign="top">
       <p>
-        E is a multi-purpose and multi-protocol command & control server designed to receive commands through the <a href="https://matrix.org">Matrix</a> chat protocol and forward them to clients. It is also specifically designed to be versatile in that it can be used to bridge any data between Matrix and other protocols as long as valid <code>esockets</code> are implemented for that protocol.
+        E is a multi-purpose and multi-protocol command & control server designed to receive commands through the <a href="https://matrix.org">Matrix</a> chat protocol and forward them to clients. It is also specifically designed to be versatile in that it can be used to bridge any data between Matrix and other protocols as long as valid <code>esockets</code> are implemented for those protocols.
     </td>
   </tr>
 </table>
