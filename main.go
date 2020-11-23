@@ -237,8 +237,29 @@ func main() {
 	// when a signal is received or if a panic occurs
 	for {
 		select {
-		case data := <-esRecvQueue:
-			fmt.Println(data)
+		case esdata := <-esRecvQueue:
+			/*
+				Data in the esRecvQueue is a map of strings in the following format:
+					"client_id": An ID of the client to allow easy recognition. Should
+										not change frequently as each new ID means a new Matrix room.
+										The esocket is responsible for determining and keeping
+										track of this, and possibly notifying the user of new IDs
+										via the recv channel.
+					"event_type": Which Matrix event type is to be used to send this data.
+										Most often this is simply `m.room.message`.
+					"in_main_room": Whether this event should be sent by the main E bot
+										in its control room (such events will be marked with
+										the name of the esocket they came from and client ID).
+										This is useful for notifying about new clients connecting,
+										for example, without the need to create a new room. The
+										value here will be converted from a string to a boolean,
+										using strconv.ParseBool.
+					"data": The contents of the Matrix event. This should be a valid JSON string
+										which will have little to no validation performed on it
+										before being sent, so the ESocket is responsible for
+										ensuring the data is valid.
+			*/
+			fmt.Println(esdata)
 		case mxdata := <-ms.RecvQueue:
 			fmt.Println(mxdata)
 		}
