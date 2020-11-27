@@ -131,3 +131,10 @@ esockets:
   # Otherwise, the esocket that failed to initialise
   # will be deinitialised and ignored.
   fatalInitFailures: false
+
+  # Whether to allow an esocket to override the ownership
+  # of a client ID. If this is true, esockets which register
+  # a client ID which already exists, will receive messages
+  # for that client ID from then on. Otherwise, they will
+  # be notified of an error.
+  allowClientIdLocationOverride: false
