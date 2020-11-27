@@ -31,8 +31,9 @@ type EConfig struct {
 		} `yaml:"managedUsers"`
 	} `yaml:"matrix"`
 	Esockets struct {
-		ConfDir           string `yaml:"confDir"`
-		FatalInitFailures bool   `yaml:"fatalInitFailures"`
+		ConfDir                       string `yaml:"confDir"`
+		FatalInitFailures             bool   `yaml:"fatalInitFailures"`
+		AllowClientIdLocationOverride bool   `yaml:"allowClientIdLocationOverride"`
 	}
 }
 
@@ -58,4 +59,5 @@ func (config *EConfig) SetDefaults() {
 	config.Matrix.ManagedUsers.DisplaynameTemplate = "e_{{ConnectionId}}"
 	config.Esockets.ConfDir = "./esocket-conf"
 	config.Esockets.FatalInitFailures = true
+	config.Esockets.AllowClientIdLocationOverride = false
 }
