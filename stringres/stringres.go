@@ -47,6 +47,8 @@ const (
 	CLIENT_ID_ALREADY_REGISTERED_REJECTION_WARN = "Esocket `%s` attempted to register client ID `%s` but the request was rejected because the ID is already registered by esocket `%s`"
 	CLIENT_ID_ALREADY_REGISTERED_OVERWRITE_WARN = "Esocket `%s` re-registered client ID `%s` from esocket `%s`"
 
+	NO_ESOCKET_MAPPING_FOR_CLIENT_ERR = "No esocket mapping was found for client `%s` so the message with ID `%s` could not be routed."
+
 	CLEAN_EXIT_ON_SIGNAL = "Signal received (%s). Exiting cleanly (re-send to force exit)..."
 	CLEAN_EXIT_TRIGGERED = "Exit requested by application. Exiting cleanly..."
 	CLEAN_EXIT_DONE      = "Exit"

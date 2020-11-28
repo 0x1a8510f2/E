@@ -269,8 +269,9 @@ func main() {
 									before being sent, so the ESocket is responsible for
 									ensuring the data is valid.
 				"ref": Any string reference which the esocket can use to match replies from E
-									(like errors) to its original messages. This can also be left
-									blank if the esocket doesn't wish to keep track of this.
+									(like errors) to its original messages. This can be ignored
+									in replies if the esocket does not wish to keep track of
+									references, but should nevertheless contain some random ID.
 			Except when the "type" key exists and is not set to "data". In this case,
 			it will be interpreted as follows:
 					- "client_id_reg" - the client ID in "src_client" will be registered
@@ -297,7 +298,7 @@ func main() {
 				// ...and send the message to the correct esocket
 				esockets.Available[esId].InQueue <- esdata
 			} else {
-				log.Warnf("No esocket mapping was found for client `%s` so the message could not be routed.", esdata["dst_client"])
+				log.Warnf(sr.NO_ESOCKET_MAPPING_FOR_CLIENT_ERR, esdata["dst_client"], esdata["ref"])
 			}
 
 		} else {
