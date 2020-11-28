@@ -1,4 +1,6 @@
-***[Work In Progress]***
+# ***[Work In Progress]*** - This codebase is in its very early stages and should not be used. You have been warned.
+<br/><br/>
+
 # E - Matrix Command & Control
 <p align="center">
   <!--<img alt="E" src="https://user-images.githubusercontent.com/37966924/98878631-588ac980-247b-11eb-897c-7c7e2c8ad1ad.png" />-->
