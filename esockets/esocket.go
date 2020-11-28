@@ -67,10 +67,10 @@ type Esocket struct {
 	runFlag bool
 
 	/* */
-	SendQueue chan map[string]string
+	InQueue chan map[string]string
 
 	/* */
-	RecvQueue chan map[string]string
+	OutQueue chan map[string]string
 
 	/* Configuration supported or required by this esocket. */
 	Config struct{}

@@ -160,7 +160,7 @@ func main() {
 	}
 
 	// Create queue (channel) for receiving data from esockets
-	esRecvQueue := make(chan map[string]string)
+	esOutQueue := make(chan map[string]string)
 
 	/* Initialise and start esockets
 	Both initialisation and starting of esockets are essentially
@@ -182,7 +182,7 @@ func main() {
 			var err error
 			if action == sr.ESOCKET_ACTION_INITIALISING {
 				// Inject received data queue
-				es.RecvQueue = esRecvQueue
+				es.OutQueue = esOutQueue
 				// Init
 				err = es.Init(config.Esockets.ConfDir + "/" + es.ID + ".yaml")
 			} else {
@@ -233,7 +233,7 @@ func main() {
 	// when a signal is received or if a panic occurs
 	for {
 		/*
-			esRecvQueue can contain data from both the master esocket and the regular esockets, but
+			esOutQueue can contain data from both the master esocket and the regular esockets, but
 			there are differences between the two. Data coming from the master esocket should look
 			as follows:
 				"src_esocket": <Esocket.ID>
@@ -276,51 +276,63 @@ func main() {
 					- "client_id_reg" - the client ID in "src_client" will be registered
 						to "src_esocket" assuming no other esocket has registered the ID
 						or "allowClientIdLocationOverride" is true. If this is not the case,
-						an error will be sent to the esocket's send queue. No other data is
+						an error will be sent to the esocket's in queue. No other data is
 						required.
 					- "client_id_unreg" - the client ID in "src_client" will be unregistered
 						if it is currently registered to "src_esocket", otherwise the command
 						will be silently ignored. No other data is required.
 			All other values of "type" will result in an error being sent to the esocket's
-			send queue.
+			in queue.
 		*/
-		esdata := <-esRecvQueue
+		esdata := <-esOutQueue
 
-		// Handle non-data message types
-		if msgtype, ok := esdata["type"]; ok && msgtype != "data" {
-			if msgtype == "client_id_reg" {
-				if _, ok := esClientMap[esdata["src_client"]]; ok {
-					// The ID is already registered
-					if config.Esockets.AllowClientIdLocationOverride {
-						// ...and it should get overwritten
-						log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_OVERWRITE_WARN, esdata["src_esocket"], esdata["src_client"], esClientMap[esdata["src_client"]])
-						esClientMap[esdata["src_client"]] = esdata["src_esocket"]
-					} else {
-						// ...and the registration should be rejected
-						log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_REJECTION_WARN, esdata["src_esocket"], esdata["src_client"], esClientMap[esdata["src_client"]])
-						esockets.Available[esdata["src_esocket"]].SendQueue <- map[string]string{
-							"type":        "error",
-							"dst_esocket": esdata["src_esocket"],
-							"dst_client":  esdata["src_client"],
-							"ref":         esdata["ref"],
+		if esdata["src_esocket"] == MasterEsocket {
+			// Is master esocket
+
+			// Ensure data is valid
+			// TODO
+
+			// Look up the esocket mapping of the destination client
+			if esId, ok := esClientMap[esdata["dst_client"]]; ok {
+				// ...and send the message to the correct esocket
+				esockets.Available[esId].InQueue <- esdata
+			} else {
+				log.Warnf("No esocket mapping was found for client `%s` so the message could not be routed.", esdata["dst_client"])
+			}
+
+		} else {
+			// Is regular esocket
+
+			// Ensure data is valid
+			// TODO
+
+			// Handle non-data message types
+			if msgtype, ok := esdata["type"]; ok && msgtype != "data" {
+				if msgtype == "client_id_reg" {
+					if _, ok := esClientMap[esdata["src_client"]]; ok {
+						// The ID is already registered
+						if config.Esockets.AllowClientIdLocationOverride {
+							// ...and it should get overwritten
+							log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_OVERWRITE_WARN, esdata["src_esocket"], esdata["src_client"], esClientMap[esdata["src_client"]])
+							esClientMap[esdata["src_client"]] = esdata["src_esocket"]
+						} else {
+							// ...and the registration should be rejected
+							log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_REJECTION_WARN, esdata["src_esocket"], esdata["src_client"], esClientMap[esdata["src_client"]])
+							esockets.Available[esdata["src_esocket"]].InQueue <- map[string]string{
+								"type":        "error",
+								"dst_esocket": esdata["src_esocket"],
+								"dst_client":  esdata["src_client"],
+								"ref":         esdata["ref"],
+							}
 						}
 					}
+				} else if msgtype == "client_id_unreg" && esClientMap[esdata["src_client"]] == esdata["src_esocket"] {
+					delete(esClientMap, esdata["src_esocket"])
 				}
-			} else if msgtype == "client_id_unreg" && esClientMap[esdata["src_client"]] == esdata["src_esocket"] {
-				delete(esClientMap, esdata["src_esocket"])
-			}
-		} else {
-			// Pass data to Matrix Socket via channel
-			esockets.Available[MasterEsocket].SendQueue <- esdata
-		}
-		/*
-						// Look up the esocket mapping of the destination client
-			if esId, ok := esClientMap[mxdata["dst_client"]]; ok {
-				// ...and send the message to the correct esocket
-				esockets.Available[esId].SendQueue <- mxdata
 			} else {
-				log.Warnf("No esocket mapping was found for client `%s` so the message could not be routed.", mxdata["dst_client"])
+				// Pass data to master esocket via its in queue
+				esockets.Available[MasterEsocket].InQueue <- esdata
 			}
-		*/
+		}
 	}
 }

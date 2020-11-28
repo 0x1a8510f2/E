@@ -40,7 +40,7 @@ func init() {
 		run: func(es *Esocket) {
 			for es.runFlag {
 				time.Sleep(1 * time.Second)
-				es.RecvQueue <- map[string]string{"recv": "works!"}
+				es.OutQueue <- map[string]string{"recv": "works!"}
 			}
 			fmt.Println("Matrix Esocket Has Exit")
 			es.runlevel = 1
