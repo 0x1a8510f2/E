@@ -18,6 +18,8 @@ const (
 	PROJECT_URL                  = "Project URL: %s"
 	ESOCKETS_AVAILABLE_COUNT     = "%d esocket(s) available"
 
+	MASTER_ESOCKET_NOT_FOUND_ERR = "The master esocket `%s` was not found; cannot continue."
+
 	ESOCKET_ACTION_INITIALISING   = "initialising"
 	ESOCKET_ACTION_STARTING       = "starting"
 	ESOCKET_ACTION_STOPPING       = "stopping"

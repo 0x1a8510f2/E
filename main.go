@@ -156,7 +156,7 @@ func main() {
 
 	// Ensure the master esocket is loaded and available
 	if _, ok := esockets.Available[MasterEsocket]; !ok {
-		log.Fatalf("The master esocket `%s` was not found; cannot continue.", MasterEsocket)
+		log.Fatalf(sr.MASTER_ESOCKET_NOT_FOUND_ERR, MasterEsocket)
 	}
 
 	// Create queue (channel) for receiving data from esockets
