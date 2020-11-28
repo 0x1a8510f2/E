@@ -12,7 +12,7 @@ func init() {
 	var esocket = Esocket{
 		ID: "defaultDns",
 		onInit: func(es *Esocket, confLocation string) error {
-			es.Runlevel = 1
+			es.runlevel = 1
 			/*err := confmgr.GetEsocketConfig(confLocation, &es.Config)
 			if err != nil {
 				return fmt.Errorf("Error reading esocket (%s) config: %s", es.ID, err.Error())
@@ -20,30 +20,30 @@ func init() {
 			return nil
 		},
 		onDeinit: func(es *Esocket) error {
-			es.Runlevel = 0
+			es.runlevel = 0
 			return nil
 		},
 		onStart: func(es *Esocket) error {
 			es.runFlag = true
-			go es.Run(es)
-			es.Runlevel = 2
+			go es.run(es)
+			es.runlevel = 2
 			return nil
 		},
 		onStop: func(es *Esocket) error {
 			es.runFlag = false
 			fmt.Println("Waiting for mainloop to exit")
-			for es.Runlevel != 1 {
+			for es.runlevel != 1 {
 				time.Sleep(5 * time.Microsecond)
 			}
 			return nil
 		},
-		Run: func(es *Esocket) {
+		run: func(es *Esocket) {
 			for es.runFlag {
 				time.Sleep(1 * time.Second)
 				es.RecvQueue <- map[string]string{"recv": "works!"}
 			}
 			fmt.Println("Default DNS Esocket Has Exit")
-			es.Runlevel = 1
+			es.runlevel = 1
 		},
 		Config: defaultDns.Config{},
 	}

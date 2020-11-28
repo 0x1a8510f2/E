@@ -39,7 +39,7 @@ type Esocket struct {
 		1 => The esocket does not expect to be stopped, but should be deinitialised before exit
 		2 => The esocket should be both stopped and deinitialised before exit
 	*/
-	Runlevel int
+	runlevel int
 
 	/* This function should run anything necessary to set
 	up the esocket, and exit quickly as it runs
@@ -61,7 +61,7 @@ type Esocket struct {
 	onStop func(es *Esocket) error
 
 	/* */
-	Run func(es *Esocket)
+	run func(es *Esocket)
 
 	/* */
 	runFlag bool
@@ -108,8 +108,8 @@ func (es *Esocket) CheckRunlevel(expected int) error {
 		return fmt.Errorf(sr.INVALID_EXPECTED_RUNLEVEL)
 	}
 	// Actually check runlevel
-	if es.Runlevel != expected {
-		return fmt.Errorf(sr.UNEXPECTED_RUNLEVEL_ERR, Runlevels[es.Runlevel], Runlevels[expected])
+	if es.runlevel != expected {
+		return fmt.Errorf(sr.UNEXPECTED_RUNLEVEL_ERR, Runlevels[es.runlevel], Runlevels[expected])
 	}
 	return nil
 }
