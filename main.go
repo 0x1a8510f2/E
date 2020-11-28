@@ -12,7 +12,6 @@ import (
 	"github.com/TR-SLimey/E/confmgr"
 	conftemplate "github.com/TR-SLimey/E/confmgr/template"
 	"github.com/TR-SLimey/E/esockets"
-	"github.com/TR-SLimey/E/mxsocket"
 	log "github.com/TR-SLimey/E/shim/log"
 	sr "github.com/TR-SLimey/E/stringres"
 )
@@ -23,6 +22,9 @@ const (
 	ProjectUrl  = "https://github.com/TR-SLimey/E"
 	// Incremented on release
 	ReleaseVersion = "pre-alpha"
+	// Name of the esocket which commands come from
+	// This must exist else an error will occur
+	MasterEsocket = "matrix"
 )
 
 var (
@@ -152,6 +154,11 @@ func main() {
 	log.Infof(sr.PROJECT_URL, ProjectUrl)
 	log.Infof(sr.ESOCKETS_AVAILABLE_COUNT, len(esockets.Available))
 
+	// Ensure the master esocket is loaded and available
+	if _, ok := esockets.Available[MasterEsocket]; !ok {
+		log.Fatalf("The master esocket `%s` was not found; cannot continue.", MasterEsocket)
+	}
+
 	// Create queue (channel) for receiving data from esockets
 	esRecvQueue := make(chan map[string]string)
 
@@ -217,21 +224,6 @@ func main() {
 		}
 	}
 
-	// Init and start the MxSocket (E<->Matrix interface)
-	log.Infof(sr.MATRIX_SOCKET_INIT)
-	ms := mxsocket.New()
-	err := ms.Init(config.Matrix.RegFilePath)
-	if err != nil {
-		log.Errorf(sr.MATRIX_SOCKET_INIT_ERR, err.Error())
-		triggerCleanExit()
-	}
-	log.Infof(sr.MATRIX_SOCKET_START)
-	err = ms.Start()
-	if err != nil {
-		log.Errorf(sr.MATRIX_SOCKET_START_ERR, err.Error())
-		triggerCleanExit()
-	}
-
 	// Maintain a mapping between the client ID and the Esocket they
 	// are connected to
 	esClientMap := make(map[string]string)
@@ -240,96 +232,95 @@ func main() {
 	// This is an infinite loop which can only end
 	// when a signal is received or if a panic occurs
 	for {
-		select {
-		case esdata := <-esRecvQueue:
-			/*
-				Data in the esRecvQueue is a map of strings in the following format:
-					"src_esocket": <Esocket.ID>
-					"src_client": An ID of the client to allow easy recognition. Should
-										not change frequently as each new ID means a new Matrix room.
-										The esocket is responsible for determining and keeping
-										track of this, and possibly notifying the user of new IDs
-										via the recv channel.
-					"event_type": Which Matrix event type is to be used to send this data.
-										Most often this is simply `m.room.message`.
-					"in_main_room": Whether this event should be sent by the main E bot
-										in its control room (such events will be marked with
-										the name of the esocket they came from and client ID).
-										This is useful for notifying about new clients connecting,
-										for example, without the need to create a new room. The
-										value here will be converted from a string to a boolean,
-										using strconv.ParseBool.
-					"data": The contents of the Matrix event. This should be a valid JSON string
-										which will have little to no validation performed on it
-										before being sent, so the ESocket is responsible for
-										ensuring the data is valid.
-					"ref": Any string reference which the esocket can use to match replies from E
-										(like errors) to its original messages. This can also be left
-										blank if the esocket doesn't wish to keep track of this.
-				Except when the "type" key exists and is not set to "data". In this case,
-				it will be interpreted as follows:
+		/*
+			esRecvQueue can contain data from both the master esocket and the regular esockets, but
+			there are differences between the two. Data coming from the master esocket should look
+			as follows:
+				"src_esocket": <Esocket.ID>
+				"dst_client": The client this message is intended for. This should simply be
+								a string ID as in src_client below. If such ID does not exist or has
+								disconnected, it is up to the dst esocket to decide what to do.
+				"event_type": Which Matrix event was used to send this message. This should usually
+								not be that useful to esockets since most simply forward the message
+								regardless, but may be useful in some edge cases or for specific
+								requirements.
+				"data": The raw content of the Marix message. This should be parsed by the esocket
+								itself as, while this makes writing an esocket more difficult,
+								it makes them much more versatile and gives them more freedom and
+								information.
+			Meanwhile, data from regular esockets looks like this:
+				"src_esocket": <Esocket.ID>
+				"src_client": An ID of the client to allow easy recognition. Should
+									not change frequently as each new ID means a new Matrix room.
+									The esocket is responsible for determining and keeping
+									track of this, and possibly notifying the user of new IDs
+									via the recv channel.
+				"event_type": Which Matrix event type is to be used to send this data.
+									Most often this is simply `m.room.message`.
+				"in_main_room": Whether this event should be sent by the main E bot
+									in its control room (such events will be marked with
+									the name of the esocket they came from and client ID).
+									This is useful for notifying about new clients connecting,
+									for example, without the need to create a new room. The
+									value here will be converted from a string to a boolean,
+									using strconv.ParseBool.
+				"data": The contents of the Matrix event. This should be a valid JSON string
+									which will have little to no validation performed on it
+									before being sent, so the ESocket is responsible for
+									ensuring the data is valid.
+				"ref": Any string reference which the esocket can use to match replies from E
+									(like errors) to its original messages. This can also be left
+									blank if the esocket doesn't wish to keep track of this.
+			Except when the "type" key exists and is not set to "data". In this case,
+			it will be interpreted as follows:
 					- "client_id_reg" - the client ID in "src_client" will be registered
 						to "src_esocket" assuming no other esocket has registered the ID
 						or "allowClientIdLocationOverride" is true. If this is not the case,
-						an error will be sent to the esocket's send queue.
+						an error will be sent to the esocket's send queue. No other data is
+						required.
 					- "client_id_unreg" - the client ID in "src_client" will be unregistered
 						if it is currently registered to "src_esocket", otherwise the command
-						will be silently ignored.
-				All other values of "type" will result in an error being sent to the esocket's
-				send queue.
-			*/
+						will be silently ignored. No other data is required.
+			All other values of "type" will result in an error being sent to the esocket's
+			send queue.
+		*/
+		esdata := <-esRecvQueue
 
-			// Handle non-data message types
-			if msgtype, ok := esdata["type"]; ok && msgtype != "data" {
-				if msgtype == "client_id_reg" {
-					if _, ok := esClientMap[esdata["src_client"]]; ok {
-						// The ID is already registered
-						if config.Esockets.AllowClientIdLocationOverride {
-							// ...and it should get overwritten
-							log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_OVERWRITE_WARN, esdata["src_esocket"], esdata["src_client"], esClientMap[esdata["src_client"]])
-							esClientMap[esdata["src_client"]] = esdata["src_esocket"]
-						} else {
-							// ...and the registration should be rejected
-							log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_REJECTION_WARN, esdata["src_esocket"], esdata["src_client"], esClientMap[esdata["src_client"]])
-							esockets.Available[esdata["src_esocket"]].SendQueue <- map[string]string{
-								"type":        "error",
-								"dst_esocket": esdata["src_esocket"],
-								"dst_client":  esdata["src_client"],
-								"ref":         esdata["ref"],
-							}
+		// Handle non-data message types
+		if msgtype, ok := esdata["type"]; ok && msgtype != "data" {
+			if msgtype == "client_id_reg" {
+				if _, ok := esClientMap[esdata["src_client"]]; ok {
+					// The ID is already registered
+					if config.Esockets.AllowClientIdLocationOverride {
+						// ...and it should get overwritten
+						log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_OVERWRITE_WARN, esdata["src_esocket"], esdata["src_client"], esClientMap[esdata["src_client"]])
+						esClientMap[esdata["src_client"]] = esdata["src_esocket"]
+					} else {
+						// ...and the registration should be rejected
+						log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_REJECTION_WARN, esdata["src_esocket"], esdata["src_client"], esClientMap[esdata["src_client"]])
+						esockets.Available[esdata["src_esocket"]].SendQueue <- map[string]string{
+							"type":        "error",
+							"dst_esocket": esdata["src_esocket"],
+							"dst_client":  esdata["src_client"],
+							"ref":         esdata["ref"],
 						}
 					}
-				} else if msgtype == "client_id_unreg" && esClientMap[esdata["src_client"]] == esdata["src_esocket"] {
-					delete(esClientMap, esdata["src_esocket"])
 				}
-			} else {
-				// Pass data to Matrix Socket via channel
-				ms.SendQueue <- esdata
+			} else if msgtype == "client_id_unreg" && esClientMap[esdata["src_client"]] == esdata["src_esocket"] {
+				delete(esClientMap, esdata["src_esocket"])
 			}
-
-		case mxdata := <-ms.RecvQueue:
-			/*
-				Data in the Matrix socket's RecvQueue is a map of strings in the following format:
-					"dst_client": The client this message is intended for. This should simply be
-									a string ID as in src_client. If such ID does not exist or has
-									disconnected, it is up to the esocket to decide what to do.
-					"event_type": Which Matrix event was used to send this message. This should usually
-									not be that useful to esockets since most simply forward the message
-									regardless, but may be useful in some edge cases or for specific
-									requirements.
-					"data": The raw content of the Marix message. This should be parsed by the esocket
-									itself as, while this makes writing an esocket more difficult,
-									it makes them much more versatile and gives them more freedom and
-									information.
-			*/
-
-			// Look up the esocket mapping of the destination client
+		} else {
+			// Pass data to Matrix Socket via channel
+			esockets.Available[MasterEsocket].SendQueue <- esdata
+		}
+		/*
+						// Look up the esocket mapping of the destination client
 			if esId, ok := esClientMap[mxdata["dst_client"]]; ok {
 				// ...and send the message to the correct esocket
 				esockets.Available[esId].SendQueue <- mxdata
 			} else {
 				log.Warnf("No esocket mapping was found for client `%s` so the message could not be routed.", mxdata["dst_client"])
 			}
-		}
+		*/
 	}
 }
