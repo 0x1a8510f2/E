@@ -181,7 +181,7 @@ func main() {
 
 			var err error
 			if action == sr.ESOCKET_ACTION_INITIALISING {
-				// Inject received data queue channel
+				// Inject received data queue
 				es.RecvQueue = esRecvQueue
 				// Init
 				err = es.Init(config.Esockets.ConfDir + "/" + es.ID + ".yaml")
