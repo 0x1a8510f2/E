@@ -1,4 +1,4 @@
-package mx
+package matrix
 
 type Config struct {
 }

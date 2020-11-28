@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/TR-SLimey/E/esockets/mx"
+	"github.com/TR-SLimey/E/esockets/matrix"
 )
 
 func init() {
@@ -45,7 +45,7 @@ func init() {
 			fmt.Println("Matrix Esocket Has Exit")
 			es.runlevel = 1
 		},
-		Config: mx.Config{},
+		Config: matrix.Config{},
 	}
 	// Register the esocket so that it can be listed and used
 	esocket.register()
