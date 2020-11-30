@@ -277,8 +277,9 @@ func main() {
 					- "client_id_reg" - the client ID in "src_client" will be registered
 						to "src_esocket" assuming no other esocket has registered the ID
 						or "allowClientIdLocationOverride" is true. If this is not the case,
-						an error will be sent to the esocket's in queue. No other data is
-						required.
+						an error will be sent to the esocket's in queue. If the ID is already
+						registered by this esocket, this will be ignored silently. No other
+						data is required.
 					- "client_id_unreg" - the client ID in "src_client" will be unregistered
 						if it is currently registered to "src_esocket", otherwise the command
 						will be silently ignored. No other data is required.
@@ -287,52 +288,127 @@ func main() {
 		*/
 		esdata := <-esOutQueue
 
-		if esdata["src_esocket"] == MasterEsocket {
+		// Ensure a valid "return address" is included in the data
+		if sourceEsId, ok := esdata["src_esocket"]; !ok {
+			log.Warnf(sr.NO_SRC_ESOCKET_ERR)
+
+		} else if sourceEsId == MasterEsocket {
 			// Is master esocket
 
 			// Ensure data is valid
-			// TODO
+			okTotal := true
+			for _, key := range []string{"dst_client", "event_type", "data"} {
+				if _, ok := esdata[key]; !ok {
+					okTotal = false
+				}
+			}
 
-			// Look up the esocket mapping of the destination client
-			if esId, ok := esClientMap[esdata["dst_client"]]; ok {
-				// ...and send the message to the correct esocket
-				esockets.Available[esId].InQueue <- esdata
+			if !okTotal {
+				log.Warnf(sr.MALFORMED_DATA_FROM_ESOCKET_ERR, sourceEsId)
 			} else {
-				log.Warnf(sr.NO_ESOCKET_MAPPING_FOR_CLIENT_ERR, esdata["dst_client"], esdata["ref"])
+				// Look up the esocket mapping of the destination client
+				if esId, ok := esClientMap[esdata["dst_client"]]; ok {
+					// ...and send the message to the correct esocket
+					esockets.Available[esId].InQueue <- esdata
+				} else {
+					log.Warnf(sr.NO_ESOCKET_MAPPING_FOR_CLIENT_ERR, esdata["dst_client"], esdata["ref"])
+				}
 			}
 
 		} else {
 			// Is regular esocket
 
-			// Ensure data is valid
-			// TODO
-
 			// Handle non-data message types
 			if msgtype, ok := esdata["type"]; ok && msgtype != "data" {
 				if msgtype == "client_id_reg" {
-					if _, ok := esClientMap[esdata["src_client"]]; ok {
+					// Ensure data is valid
+					okTotal := true
+					// Loop is unnecessary but is left in for easy editing - will likely
+					// be optimised out by the compiler anyway.
+					for _, key := range []string{"src_client"} {
+						if _, ok := esdata[key]; !ok {
+							okTotal = false
+						}
+					}
+
+					if !okTotal {
+						// The data is invalid
+						log.Warnf(sr.MALFORMED_DATA_FROM_ESOCKET_ERR, sourceEsId)
+						esockets.Available[sourceEsId].InQueue <- map[string]string{
+							"type":        "error",
+							"error":       "", // TODO
+							"dst_esocket": esdata["src_esocket"],
+							"dst_client":  esdata["src_client"],
+							"ref":         esdata["ref"],
+						}
+					} else if _, ok := esClientMap[esdata["src_client"]]; okTotal && ok {
 						// The ID is already registered
 						if config.Esockets.AllowClientIdLocationOverride {
 							// ...and it should get overwritten
-							log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_OVERWRITE_WARN, esdata["src_esocket"], esdata["src_client"], esClientMap[esdata["src_client"]])
-							esClientMap[esdata["src_client"]] = esdata["src_esocket"]
+							log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_OVERWRITE_WARN, sourceEsId, esdata["src_client"], esClientMap[esdata["src_client"]])
+							esClientMap[esdata["src_client"]] = sourceEsId
 						} else {
 							// ...and the registration should be rejected
-							log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_REJECTION_WARN, esdata["src_esocket"], esdata["src_client"], esClientMap[esdata["src_client"]])
-							esockets.Available[esdata["src_esocket"]].InQueue <- map[string]string{
+							log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_REJECTION_WARN, sourceEsId, esdata["src_client"], esClientMap[esdata["src_client"]])
+							esockets.Available[sourceEsId].InQueue <- map[string]string{
 								"type":        "error",
+								"error":       "", // TODO
 								"dst_esocket": esdata["src_esocket"],
 								"dst_client":  esdata["src_client"],
 								"ref":         esdata["ref"],
 							}
 						}
+					} else {
+						// The client ID is not yet registered
+						// TODO
 					}
-				} else if msgtype == "client_id_unreg" && esClientMap[esdata["src_client"]] == esdata["src_esocket"] {
-					delete(esClientMap, esdata["src_esocket"])
+				} else if msgtype == "client_id_unreg" {
+					// Ensure data is valid
+					okTotal := true
+					// Loop is unnecessary but is left in for easy editing - will likely
+					// be optimised out by the compiler anyway.
+					for _, key := range []string{"src_client"} {
+						if _, ok := esdata[key]; !ok {
+							okTotal = false
+						}
+					}
+
+					if !okTotal {
+						// The data is invalid
+						log.Warnf(sr.MALFORMED_DATA_FROM_ESOCKET_ERR, sourceEsId)
+						esockets.Available[sourceEsId].InQueue <- map[string]string{
+							"type":        "error",
+							"error":       "", // TODO
+							"dst_esocket": esdata["src_esocket"],
+							"dst_client":  esdata["src_client"],
+							"ref":         esdata["ref"],
+						}
+					} else if esClientMap[esdata["src_client"]] == esdata["src_esocket"] {
+						delete(esClientMap, esdata["src_esocket"])
+					}
 				}
 			} else {
-				// Pass data to master esocket via its in queue
-				esockets.Available[MasterEsocket].InQueue <- esdata
+				// Ensure data is valid
+				okTotal := true
+				for _, key := range []string{"src_client", "event_type", "in_main_room", "data", "ref"} {
+					if _, ok := esdata[key]; !ok {
+						okTotal = false
+					}
+				}
+
+				if !okTotal {
+					log.Warnf(sr.MALFORMED_DATA_FROM_ESOCKET_ERR, sourceEsId)
+					esockets.Available[sourceEsId].InQueue <- map[string]string{
+						"type":        "error",
+						"error":       "", // TODO
+						"dst_esocket": esdata["src_esocket"],
+						"dst_client":  esdata["src_client"],
+						"ref":         esdata["ref"],
+					}
+				} else {
+					// Pass data to master esocket via its in queue
+					esockets.Available[MasterEsocket].InQueue <- esdata
+				}
 			}
 		}
 	}

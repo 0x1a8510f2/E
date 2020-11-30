@@ -44,10 +44,11 @@ const (
 	MATRIX_SOCKET_INIT_ERR  = "A fatal error has occured while initialising the Matrix Socket: %s"
 	MATRIX_SOCKET_START_ERR = "A fatal error has occured while starting the Matrix Socket: %s"
 
+	NO_SRC_ESOCKET_ERR                          = "An event was received but the origin esocket could not be determined. Dropping the event"
+	MALFORMED_DATA_FROM_ESOCKET_ERR             = "An event was received from esocket `%s` but it was malformed. Dropping the event"
 	CLIENT_ID_ALREADY_REGISTERED_REJECTION_WARN = "Esocket `%s` attempted to register client ID `%s` but the request was rejected because the ID is already registered by esocket `%s`"
 	CLIENT_ID_ALREADY_REGISTERED_OVERWRITE_WARN = "Esocket `%s` re-registered client ID `%s` from esocket `%s`"
-
-	NO_ESOCKET_MAPPING_FOR_CLIENT_ERR = "No esocket mapping was found for client `%s` so the message with ID `%s` could not be routed."
+	NO_ESOCKET_MAPPING_FOR_CLIENT_ERR           = "No esocket mapping was found for client `%s` so the message with ID `%s` could not be routed."
 
 	CLEAN_EXIT_ON_SIGNAL = "Signal received (%s). Exiting cleanly (re-send to force exit)..."
 	CLEAN_EXIT_TRIGGERED = "Exit requested by application. Exiting cleanly..."
