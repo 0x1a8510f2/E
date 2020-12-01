@@ -24,6 +24,9 @@ const (
 	ReleaseVersion = "pre-alpha"
 	// Name of the esocket which commands come from
 	// This must exist else an error will occur
+	// The esocket should also be designed with being a
+	// master esocket in mind as they have slightly different
+	// functionality.
 	MasterEsocket = "matrix"
 )
 
