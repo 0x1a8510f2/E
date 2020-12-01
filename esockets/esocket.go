@@ -10,6 +10,16 @@ import (
 esocket.register(). */
 var Available = make(map[string]*Esocket)
 
+/* What error codes returned by E mean */
+var ReturnErrCodes = [...]string{
+	"generic error",              // 0
+	"event cancelled",            // 1
+	"unable to route event",      // 2
+	"malformed event",            // 3
+	"destination reported error", // 4
+	"client already registered",  // 5
+}
+
 /* What runlevels translate to in human readable format */
 var Runlevels = [...]string{
 	"UNINITIALISED",

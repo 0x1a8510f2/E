@@ -336,7 +336,8 @@ func main() {
 						log.Warnf(sr.MALFORMED_DATA_FROM_ESOCKET_ERR, sourceEsId)
 						esockets.Available[sourceEsId].InQueue <- map[string]string{
 							"type":        "error",
-							"error":       "", // TODO
+							"err_code":    "3",
+							"err_msg":     "",
 							"dst_esocket": esdata["src_esocket"],
 							"dst_client":  esdata["src_client"],
 							"ref":         esdata["ref"],
@@ -352,7 +353,8 @@ func main() {
 							log.Warnf(sr.CLIENT_ID_ALREADY_REGISTERED_REJECTION_WARN, sourceEsId, esdata["src_client"], esClientMap[esdata["src_client"]])
 							esockets.Available[sourceEsId].InQueue <- map[string]string{
 								"type":        "error",
-								"error":       "", // TODO
+								"err_code":    "5",
+								"err_msg":     "",
 								"dst_esocket": esdata["src_esocket"],
 								"dst_client":  esdata["src_client"],
 								"ref":         esdata["ref"],
@@ -360,7 +362,7 @@ func main() {
 						}
 					} else {
 						// The client ID is not yet registered
-						// TODO
+						esClientMap[esdata["src_client"]] = sourceEsId
 					}
 				} else if msgtype == "client_id_unreg" {
 					// Ensure data is valid
@@ -378,7 +380,8 @@ func main() {
 						log.Warnf(sr.MALFORMED_DATA_FROM_ESOCKET_ERR, sourceEsId)
 						esockets.Available[sourceEsId].InQueue <- map[string]string{
 							"type":        "error",
-							"error":       "", // TODO
+							"err_code":    "3",
+							"err_msg":     "",
 							"dst_esocket": esdata["src_esocket"],
 							"dst_client":  esdata["src_client"],
 							"ref":         esdata["ref"],
@@ -400,7 +403,8 @@ func main() {
 					log.Warnf(sr.MALFORMED_DATA_FROM_ESOCKET_ERR, sourceEsId)
 					esockets.Available[sourceEsId].InQueue <- map[string]string{
 						"type":        "error",
-						"error":       "", // TODO
+						"err_code":    "3",
+						"err_msg":     "",
 						"dst_esocket": esdata["src_esocket"],
 						"dst_client":  esdata["src_client"],
 						"ref":         esdata["ref"],
