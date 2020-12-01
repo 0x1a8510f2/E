@@ -321,11 +321,11 @@ func main() {
 			// Handle non-data message types
 			if msgtype, ok := esdata["type"]; ok && msgtype != "data" {
 				if msgtype == "client_id_reg" {
+					// Registering client ID to esocket
+
 					// Ensure data is valid
 					okTotal := true
-					// Loop is unnecessary but is left in for easy editing - will likely
-					// be optimised out by the compiler anyway.
-					for _, key := range []string{"src_client"} {
+					for _, key := range []string{"src_client", "ref"} {
 						if _, ok := esdata[key]; !ok {
 							okTotal = false
 						}
@@ -365,11 +365,11 @@ func main() {
 						esClientMap[esdata["src_client"]] = sourceEsId
 					}
 				} else if msgtype == "client_id_unreg" {
+					// Unregistering client ID from esocket
+
 					// Ensure data is valid
 					okTotal := true
-					// Loop is unnecessary but is left in for easy editing - will likely
-					// be optimised out by the compiler anyway.
-					for _, key := range []string{"src_client"} {
+					for _, key := range []string{"src_client", "ref"} {
 						if _, ok := esdata[key]; !ok {
 							okTotal = false
 						}
@@ -387,7 +387,23 @@ func main() {
 							"ref":         esdata["ref"],
 						}
 					} else if esClientMap[esdata["src_client"]] == esdata["src_esocket"] {
+						// The data is valid and the client belongs to the sending esocket
+						// NOTE: The above check relies on on esockets being truthful about who they
+						// are, but we assume esockets are trustworthy, since running an untrustworthy
+						// esocket means arbitrary code execution anyway, which is a bigger concern
+						// than clients being unregistered maliciously.
 						delete(esClientMap, esdata["src_esocket"])
+					}
+				} else {
+					// Invalid data type
+					log.Warnf(sr.INVALID_DATA_TYPE_IN_CHANNEL_ERR, msgtype)
+					esockets.Available[sourceEsId].InQueue <- map[string]string{
+						"type":        "error",
+						"err_code":    "6",
+						"err_msg":     fmt.Sprintf(sr.INVALID_DATA_TYPE_IN_CHANNEL_RETURN_MSG, msgtype),
+						"dst_esocket": esdata["src_esocket"],
+						"dst_client":  esdata["src_client"],
+						"ref":         esdata["ref"],
 					}
 				}
 			} else {

@@ -48,7 +48,10 @@ const (
 	MALFORMED_DATA_FROM_ESOCKET_ERR             = "An event was received from esocket `%s` but it was malformed. Dropping the event"
 	CLIENT_ID_ALREADY_REGISTERED_REJECTION_WARN = "Esocket `%s` attempted to register client ID `%s` but the request was rejected because the ID is already registered by esocket `%s`"
 	CLIENT_ID_ALREADY_REGISTERED_OVERWRITE_WARN = "Esocket `%s` re-registered client ID `%s` from esocket `%s`"
-	NO_ESOCKET_MAPPING_FOR_CLIENT_ERR           = "No esocket mapping was found for client `%s` so the message with ID `%s` could not be routed."
+	NO_ESOCKET_MAPPING_FOR_CLIENT_ERR           = "No esocket mapping was found for client `%s` so the message with ID `%s` could not be routed"
+	INVALID_DATA_TYPE_IN_CHANNEL_ERR            = "The esocket specified an invalid data type (`%s`) so we don't know what to do with the data"
+
+	INVALID_DATA_TYPE_IN_CHANNEL_RETURN_MSG = "data type %s is not valid"
 
 	CLEAN_EXIT_ON_SIGNAL = "Signal received (%s). Exiting cleanly (re-send to force exit)..."
 	CLEAN_EXIT_TRIGGERED = "Exit requested by application. Exiting cleanly..."
