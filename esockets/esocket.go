@@ -2,6 +2,7 @@ package esockets
 
 import (
 	"fmt"
+	"time"
 
 	sr "github.com/TR-SLimey/E/stringres"
 )
@@ -112,11 +113,48 @@ func (es *Esocket) Stop() error {
 	return es.onStop(es)
 }
 
+/* */
+func (es *Esocket) readInQueue(timeout time.Duration) (map[string]string, error) {
+	if timeout > 0 {
+		select {
+		// Timeout (usually used to not block Esocket mainloop indefinitely)
+		case <-time.After(timeout * time.Millisecond):
+			return nil, nil
+
+		case data := <-es.InQueue:
+			return data, nil
+		}
+	} else {
+		// If the timeout is negative, don't time out
+		data := <-es.InQueue
+		return data, nil
+	}
+}
+
+/* */
+func (es *Esocket) writeOutQueue(data map[string]string, timeout time.Duration) error {
+	if timeout > 0 {
+		select {
+		// Timeout (writing should never really time out unless something is
+		// wrong with the E mainloop so this can be used to catch such occurences)
+		case <-time.After(timeout * time.Millisecond):
+			return fmt.Errorf(sr.ESOCKET_OUT_QUEUE_WRITE_TIMEOUT, es.ID)
+
+		case es.OutQueue <- data:
+			return nil
+		}
+	} else {
+		// If the timeout is negative, don't time out
+		es.OutQueue <- data
+		return nil
+	}
+}
+
 /* Check whether the runlevel of the esocket is as expected */
 func (es *Esocket) CheckRunlevel(expected int) error {
 	// Ensure the expected runlevel is valid to prevent further errors
 	if expected < 0 || expected > len(Runlevels)-1 {
-		return fmt.Errorf(sr.INVALID_EXPECTED_RUNLEVEL)
+		return fmt.Errorf(sr.INVALID_EXPECTED_RUNLEVEL, expected)
 	}
 	// Actually check runlevel
 	if es.runlevel != expected {
