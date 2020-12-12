@@ -36,7 +36,7 @@ const (
 	CONFIG_FILE_OPEN_ERR  = "Could not open config file (%s) for reading! Failed with error: %s"
 	CONFIG_FILE_PARSE_ERR = "Could not parse config file (%s). Failed with error: %s"
 
-	INVALID_EXPECTED_RUNLEVEL = "The expected runlevel is invalid."
+	INVALID_EXPECTED_RUNLEVEL = "The expected runlevel (`%s`) is invalid."
 	UNEXPECTED_RUNLEVEL_ERR   = "Esocket reports as `%s` but `%s` was expected."
 
 	MATRIX_SOCKET_INIT      = "Initialising Matrix socket"
@@ -52,6 +52,8 @@ const (
 	INVALID_DATA_TYPE_IN_CHANNEL_ERR            = "The esocket specified an invalid data type (`%s`) so we don't know what to do with the data"
 
 	INVALID_DATA_TYPE_IN_CHANNEL_RETURN_MSG = "data type %s is not valid"
+
+	ESOCKET_OUT_QUEUE_WRITE_TIMEOUT = "A write to the esocket out queue timed out for `%s` esocket"
 
 	CLEAN_EXIT_ON_SIGNAL = "Signal received (%s). Exiting cleanly (re-send to force exit)..."
 	CLEAN_EXIT_TRIGGERED = "Exit requested by application. Exiting cleanly..."
