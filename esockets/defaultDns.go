@@ -39,8 +39,15 @@ func init() {
 		},
 		run: func(es *Esocket) {
 			for es.runFlag {
+				_ = es.writeOutQueue(map[string]string{
+					"src_esocket":  es.ID,
+					"src_client":   "noclient",
+					"event_type":   "test",
+					"in_main_room": "true",
+					"data":         "testing!",
+					"ref":          "noref",
+				}, -1)
 				time.Sleep(1 * time.Second)
-				es.OutQueue <- map[string]string{"recv": "works!"}
 			}
 			fmt.Println("Default DNS Esocket Has Exit")
 			es.runlevel = 1

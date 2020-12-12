@@ -39,8 +39,12 @@ func init() {
 		},
 		run: func(es *Esocket) {
 			for es.runFlag {
-				time.Sleep(1 * time.Second)
-				es.OutQueue <- map[string]string{"recv": "works!"}
+				// Read queue with a timeout of 1/2 second as to check
+				// runFlag periodically
+				data, _ := es.readInQueue(500)
+				if data != nil {
+					fmt.Printf("Matrix ESocket received data: %v\n", data)
+				}
 			}
 			fmt.Println("Matrix Esocket Has Exit")
 			es.runlevel = 1
