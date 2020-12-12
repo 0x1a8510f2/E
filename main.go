@@ -171,7 +171,7 @@ func main() {
 	makes sense. */
 
 	// First, ensure that the strings haven't been tweaked to be
-	// the same because that breaks some of the logic
+	// the same because that breaks some of the logic (just in case)
 	if sr.ESOCKET_ACTION_INITIALISING == sr.ESOCKET_ACTION_STARTING {
 		log.Fatalf(sr.INITIALISING_IS_STARTING_ERR)
 	}
@@ -184,6 +184,8 @@ func main() {
 
 			var err error
 			if action == sr.ESOCKET_ACTION_INITIALISING {
+				// Inject incoming data queue
+				es.InQueue = make(chan map[string]string)
 				// Inject received data queue
 				es.OutQueue = esOutQueue
 				// Init
