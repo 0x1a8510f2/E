@@ -36,7 +36,7 @@ const (
 	CONFIG_FILE_OPEN_ERR  = "Could not open config file (%s) for reading! Failed with error: %s"
 	CONFIG_FILE_PARSE_ERR = "Could not parse config file (%s). Failed with error: %s"
 
-	INVALID_EXPECTED_RUNLEVEL = "The expected runlevel (`%s`) is invalid."
+	INVALID_EXPECTED_RUNLEVEL = "The expected runlevel (`%d`) is invalid."
 	UNEXPECTED_RUNLEVEL_ERR   = "Esocket reports as `%s` but `%s` was expected."
 
 	MATRIX_SOCKET_INIT      = "Initialising Matrix socket"
