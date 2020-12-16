@@ -115,7 +115,7 @@ func (es *Esocket) Stop() error {
 
 /* */
 func (es *Esocket) readInQueue(timeout time.Duration) (map[string]string, error) {
-	if timeout > 0 {
+	if timeout >= 0 {
 		select {
 		// Timeout (usually used to not block Esocket mainloop indefinitely)
 		case <-time.After(timeout * time.Millisecond):
@@ -133,7 +133,7 @@ func (es *Esocket) readInQueue(timeout time.Duration) (map[string]string, error)
 
 /* */
 func (es *Esocket) writeOutQueue(data map[string]string, timeout time.Duration) error {
-	if timeout > 0 {
+	if timeout >= 0 {
 		select {
 		// Timeout (writing should never really time out unless something is
 		// wrong with the E mainloop so this can be used to catch such occurences)
